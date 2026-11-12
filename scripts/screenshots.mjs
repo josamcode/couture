@@ -1,10 +1,11 @@
-// Visual QA: screenshots of every section at four viewports, plus mid-transition frames
-// (painting dissolve, both torn edges). Output: qa/screenshots/<viewport>/NN-name.jpg
+// Visual QA: screenshots of every section at four viewports (plus a narrow WebKit phone),
+// including mid-transition frames of every scroll scene.
+// Output: qa/screenshots/<viewport>/NN-name.jpg
 //
 // Needs the built site to be served:  npm run build && npm run serve   (in another terminal)
 // Then:                               npm run screenshots   [-- http://localhost:4321] [viewportName]
 import { chromium, webkit } from '@playwright/test';
-import { mkdir } from 'node:fs/promises';
+import { mkdir, rm } from 'node:fs/promises';
 import path from 'node:path';
 
 const args = process.argv.slice(2);
@@ -20,22 +21,21 @@ const VIEWPORTS = [
   { name: '375x640-webkit', width: 375, height: 640, dpr: 2, mobile: true, engine: 'webkit' },
 ];
 
-const settle = (page, ms = 900) => page.waitForTimeout(ms);
-
 for (const vp of VIEWPORTS) {
   if (only && vp.name !== only) continue;
-  const engine = vp.engine === 'webkit' ? webkit : chromium;
-  const browser = await engine.launch(
-    vp.engine === 'webkit' ? {} : { args: ['--enable-unsafe-swiftshader', '--ignore-gpu-blocklist'] },
+  const isWebkit = vp.engine === 'webkit';
+  const browser = await (isWebkit ? webkit : chromium).launch(
+    isWebkit ? {} : { args: ['--enable-unsafe-swiftshader', '--ignore-gpu-blocklist'] },
   );
   const ctx = await browser.newContext({
     viewport: { width: vp.width, height: vp.height },
     deviceScaleFactor: vp.dpr,
-    isMobile: vp.mobile && vp.engine !== 'webkit' ? true : undefined,
+    isMobile: vp.mobile && !isWebkit ? true : undefined,
     hasTouch: vp.mobile,
   });
   const page = await ctx.newPage();
   const dir = path.resolve('qa/screenshots', vp.name);
+  await rm(dir, { recursive: true, force: true });
   await mkdir(dir, { recursive: true });
   let n = 0;
   const shot = async (name) => {
@@ -44,69 +44,87 @@ for (const vp of VIEWPORTS) {
     await page.screenshot({ path: file, type: 'jpeg', quality: 84 });
     console.log(`  ${vp.name}/${path.basename(file)}`);
   };
-  const scrollTo = async (y, wait = 900) => {
+  const scrollTo = async (y, wait = 1300) => {
     await page.evaluate((top) => window.scrollTo({ top, behavior: 'instant' }), Math.max(0, Math.round(y)));
-    await settle(page, wait);
+    await page.waitForTimeout(wait);
   };
   const topOf = (sel) => page.evaluate((s) => document.querySelector(s).getBoundingClientRect().top + scrollY, sel);
 
   await page.goto(base, { waitUntil: 'load' });
   await page.evaluate(() => document.fonts.ready);
-  await settle(page, 3200); // headline reveal + WebGL start
+  await page.waitForFunction(() => document.documentElement.classList.contains('scroll-ready'));
+  await page.waitForTimeout(2500); // headline reveal
   await shot('hero');
 
   const H = vp.height;
   const collectionTop = await topOf('#collection');
-  const pinned = await page.evaluate(() => getComputedStyle(document.querySelector('[data-hero-stage]')).position === 'sticky');
+  const pinned = await page.evaluate(
+    () => getComputedStyle(document.querySelector('[data-hero-stage]')).position === 'sticky',
+  );
 
+  // ---- Scene I
+  await page.mouse.move(vp.width * 0.42, vp.height * 0.4); // wakes the WebGL warm-up; also where the candle is
+  await page.waitForTimeout(2500);
   if (pinned) {
-    // desktop scene: headline lifts → painting fills the screen → becomes the drawing → paper slides over
-    await scrollTo(H * 0.42, 1300);
+    // desktop: headline lifts → painting fills the screen → becomes the drawing → paper slides over
+    await scrollTo(H * 0.42);
     await shot('hero-painting-growing');
-    await scrollTo(H * 0.95, 1300);
+    await scrollTo(H * 0.9);
     await shot('hero-painting-full-bleed');
-    await scrollTo(H * 1.3, 1300);
+    await scrollTo(H * 1.25);
     await shot('hero-dissolve-mid');
-    await page.mouse.move(vp.width * 0.42, vp.height * 0.4);
-    await scrollTo(H * 1.62, 1500);
+    await scrollTo(H * 1.62, 1600);
     await shot('hero-lineart-candle');
-    await scrollTo(collectionTop - H * 0.5, 1300);
+    await scrollTo(collectionTop - H * 0.5);
     await shot('torn-ivory-over-ink');
   } else {
-    // phone scene: the plate is held mid-screen, grows, becomes the drawing, the paper rises over it
-    await scrollTo(H * 0.45, 1300);
+    // phones: the plate is held mid-screen, grows, becomes the drawing, the paper rises over it
+    await scrollTo(H * 0.45);
     await shot('hero-plate-held');
-    await scrollTo(H * 0.78, 1300);
+    await scrollTo(H * 0.8);
     await shot('hero-dissolve-mid');
-    await scrollTo(H * 1.05, 1500);
+    await scrollTo(H * 1.1, 1600);
     await shot('hero-lineart');
-    await scrollTo(collectionTop - H * 0.62, 1300);
+    await scrollTo(collectionTop - H * 0.55);
     await shot('torn-ivory-over-ink');
   }
 
-  await scrollTo(collectionTop, 1600);
+  // ---- Scene II: the fitting room (scroll walks through the looks)
+  await scrollTo(collectionTop, 1800);
   await shot('collection-head');
-  const compareTop = await topOf('.spread:not([hidden]) .compare');
-  await scrollTo(compareTop - H * 0.16, 1200);
-  await page.waitForTimeout(3800); // let the "show me" sweep finish
-  await shot('collection-compare');
-  const boxTop = await topOf('.spread:not([hidden]) .box');
-  await scrollTo(boxTop - H * 0.35);
-  await shot('collection-box-price');
+  const scene = await page.evaluate(() => {
+    const s = document.querySelector('[data-spreads]');
+    const a = document.querySelector('[data-spread]:not([hidden])');
+    const stick = getComputedStyle(a).position === 'sticky' ? parseFloat(getComputedStyle(a).top) || 0 : 0;
+    return { start: s.getBoundingClientRect().top + scrollY - stick, run: Math.max(0, s.offsetHeight - a.offsetHeight) };
+  });
+  if (scene.run > 0) {
+    await scrollTo(scene.start + scene.run * 0.02, 1800);
+    await shot('look-I-off-the-rack');
+    await scrollTo(scene.start + scene.run * 0.13, 1800);
+    await shot('look-I-dressed');
+    await scrollTo(scene.start + scene.run * 0.25, 2000);
+    await shot('look-II-mid');
+    await scrollTo(scene.start + scene.run * 0.42, 2000);
+    await shot('look-III-mid');
+    await scrollTo(scene.start + scene.run * 0.75, 2000);
+    await shot('look-V-mid');
+    await scrollTo(scene.start + scene.run * 0.97, 2000);
+    await shot('look-VI-dressed');
+    await scrollTo(scene.start + scene.run + H * 0.45, 1800);
+    await shot('collection-box-price');
+  } else {
+    await scrollTo((await topOf('.spread:not([hidden]) .compare')) - H * 0.16, 1800);
+    await shot('collection-compare');
+  }
 
-  // a second look, to see the swap result
-  await page.locator('button[data-look="noir"]').click();
-  await settle(page, 1800);
-  const headTop = await topOf('.spread:not([hidden]) [data-spread-head]');
-  await scrollTo(headTop - H * 0.18, 1200);
-  await shot('collection-look-noir');
-
+  // ---- Scene III
   const wardrobeTop = await topOf('#wardrobe');
   await scrollTo(wardrobeTop - H * 0.5);
   await shot('torn-ink-over-ivory');
-  await scrollTo(wardrobeTop, 2200);
+  await scrollTo(wardrobeTop, 2400);
   await shot('wardrobe');
-  await scrollTo(await page.evaluate(() => document.documentElement.scrollHeight), 1600);
+  await scrollTo(await page.evaluate(() => document.documentElement.scrollHeight), 2200);
   await shot('wardrobe-card-footer');
 
   await browser.close();

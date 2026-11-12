@@ -155,7 +155,7 @@ import Motes from './Motes.astro';
     inset: 0;
   }
   /* Starting pose for the settle-in (1.06 → 1). Only when JS + motion are on. */
-  :global(html.js.motion) .plate__scale {
+  :global(html.js.motion:not(.reveal-fallback)) .plate__scale {
     transform: scale(1.06);
   }
   .plate__scale picture,
@@ -223,17 +223,17 @@ import Motes from './Motes.astro';
   /* ---------- Phones and tablets: the painting holds in the middle of the screen while it
      turns into a drawing, then the paper rises over it. CSS sticky, only with JS + motion. ---------- */
   @media (max-width: 63.99em) and (min-height: 30em) {
-    :global(html.js.motion) .hero__stage {
+    :global(html.js.motion:not(.reveal-fallback)) .hero__stage {
       padding-bottom: 0;
     }
     /* the runway the painting is held over. It has to be real content (a sticky box can only travel
        inside its container's content area, not its padding), so it is an empty flex item. */
-    :global(html.js.motion) .hero__lower::after {
+    :global(html.js.motion:not(.reveal-fallback)) .hero__lower::after {
       content: '';
       flex: none;
       height: 160svh;
     }
-    :global(html.js.motion) .hero__figure-cell {
+    :global(html.js.motion:not(.reveal-fallback)) .hero__figure-cell {
       position: sticky;
       z-index: 2;
       /* centres the 16:9 plate: half the screen minus half the plate */
@@ -280,17 +280,17 @@ import Motes from './Motes.astro';
 
     /* The curtain: the stage holds still while the painting dissolves, then the paper slides over it.
        Pure CSS sticky (no JS pinning). Only when JS + motion are on; otherwise the section is one screen tall. */
-    :global(html.js.motion) .hero {
+    :global(html.js.motion:not(.reveal-fallback)) .hero {
       /* 100svh stage + 160svh for the scene (the painting fills the screen, then becomes a drawing)
          + 100svh for the paper to slide over it */
       height: 360svh;
     }
-    :global(html.js.motion) .plate {
+    :global(html.js.motion:not(.reveal-fallback)) .plate {
       position: relative;
       z-index: 2;
       will-change: transform;
     }
-    :global(html.js.motion) .hero__stage {
+    :global(html.js.motion:not(.reveal-fallback)) .hero__stage {
       position: sticky;
       top: 0;
     }

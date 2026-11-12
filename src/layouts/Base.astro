@@ -39,7 +39,9 @@ const ogImage = site ? new URL('/og.png', site).href : '/og.png';
     {canonical && <meta property="og:url" content={canonical} />}
     <meta name="twitter:card" content="summary_large_image" />
 
-    {/* Progressive enhancement: content is only ever hidden for animation after this runs. */}
+    {/* Progressive enhancement: content is only ever hidden for animation after this runs.
+        If the scripts have not come up after 4 seconds (blocked, offline, failed), reveal-fallback
+        shows everything and switches the pinned scroll scenes off, so the page is a plain page. */}
     <script is:inline>
       (function (d, w) {
         var c = d.documentElement.classList;

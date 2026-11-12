@@ -63,7 +63,11 @@ const images = (slug: string, name: string): Look['images'] => ({
   },
 });
 
-const look = (numeral: string, slug: string, name: string, tagline: string): Look => ({
+/**
+ * Builds a look with the defaults every look shares. Pass a last argument to override anything
+ * for one look, for example:  look('I', 'editorial', 'Editorial', '…', { price: '$49', placeholder: false })
+ */
+const look = (numeral: string, slug: string, name: string, tagline: string, overrides: Partial<Look> = {}): Look => ({
   slug,
   numeral,
   name,
@@ -73,6 +77,7 @@ const look = (numeral: string, slug: string, name: string, tagline: string): Loo
   contents: contents(),
   images: images(slug, name),
   placeholder: true,
+  ...overrides,
 });
 
 // Placeholder looks. Jo will rename them.

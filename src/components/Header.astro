@@ -19,7 +19,8 @@ import { SITE } from '../data/site';
 </header>
 
 <style>
-  /* Without JS the header simply sits at the top of the page (it cannot switch tone, so it must not float). */
+  /* Without working scripts the header simply sits at the top of the page
+     (it cannot switch tone over the ivory section, so it must not float). */
   .site-header {
     position: absolute;
     top: 0;
@@ -28,17 +29,17 @@ import { SITE } from '../data/site';
     z-index: 50;
     color: var(--fg);
   }
-  :global(html.js) .site-header {
+  :global(html.js:not(.reveal-fallback)) .site-header {
     position: fixed;
     transition: transform var(--dur-fast) var(--ease-out);
     will-change: transform;
   }
   /* Scroll down: the header leaves. Scroll up: it returns. */
-  :global(html.js) .site-header.is-hidden {
+  :global(html.js:not(.reveal-fallback)) .site-header.is-hidden {
     transform: translateY(-100%);
   }
   /* Keyboard users never lose it. */
-  :global(html.js) .site-header.is-hidden:focus-within {
+  :global(html.js:not(.reveal-fallback)) .site-header.is-hidden:focus-within {
     transform: none;
   }
 

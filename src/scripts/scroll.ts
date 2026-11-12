@@ -299,7 +299,31 @@ function fittingRoom(): Cleanup {
   let drawn = { index: -1, local: -1 };
   let pendingLook: string | null = null;
 
+  // Fit guard. The scene only runs when the essentials of a look (its name, the frame, the price and
+  // the buy button) fit on the screen while the look is held. On a short window, or with enlarged
+  // text, nothing is held and the section stays a normal page (.is-plain switches the sticky CSS off).
+  let plain = false;
+  const checkFit = () => {
+    section.classList.remove('is-plain'); // measure the scene's own layout
+    const spread = shownSpread();
+    if (!spread) return;
+    const stick = parseFloat(getComputedStyle(spread).top) || 0;
+    // offsetTop/offsetHeight: layout positions inside the spread, unaffected by transforms
+    const bottoms = ['[data-spread-compare]', '.spread__buy'].map((sel) => {
+      const el = $(sel, spread);
+      return el ? el.offsetTop + el.offsetHeight : 0;
+    });
+    plain = stick + Math.max(...bottoms) > window.innerHeight - 8;
+    section.classList.toggle('is-plain', plain);
+    if (plain) {
+      gsap.set([...frameOf.values(), ...ghostOf.values()].filter(Boolean), { clearProps: 'transform' });
+      drawn = { index: -1, local: -1 };
+    }
+  };
+  ScrollTrigger.addEventListener('refreshInit', checkFit);
+
   const read = (self: ScrollTrigger) => {
+    if (plain) return;
     const p = self.progress * n;
     const i = Math.min(n - 1, Math.floor(p));
     local = Math.min(1, p - i);
@@ -313,6 +337,7 @@ function fittingRoom(): Cleanup {
 
   let st: ScrollTrigger | undefined;
   whenMeasuring(() => {
+    checkFit();
     st = ScrollTrigger.create({
       trigger: spreads,
       // from the moment the spread sticks, for as long as the runway lasts
@@ -331,7 +356,7 @@ function fittingRoom(): Cleanup {
   // Index clicks: while the scene is in play (or still ahead), travel to that look's stretch.
   // Past the end of the runway, swap in place so the visitor is not dragged back up the page.
   collection.setNavigator((slug) => {
-    if (!st || st.progress >= 1) return false;
+    if (plain || !st || st.progress >= 1) return false;
     const i = slugs.indexOf(slug);
     if (i < 0) return false;
     scroller.to(st.start + ((i + 0.5) / n) * (st.end - st.start));
@@ -340,6 +365,7 @@ function fittingRoom(): Cleanup {
 
   const ease = gsap.parseEase(EASE.inOut);
   const tick = () => {
+    if (plain) return;
     if (pendingLook) {
       collection.select(pendingLook);
       pendingLook = null;
@@ -366,6 +392,8 @@ function fittingRoom(): Cleanup {
 
   return () => {
     gsap.ticker.remove(tick);
+    ScrollTrigger.removeEventListener('refreshInit', checkFit);
+    section.classList.remove('is-plain');
     collection.setNavigator(null);
     st?.kill();
     gsap.set([...frameOf.values(), ...ghostOf.values()].filter(Boolean), { clearProps: 'transform' });
@@ -551,6 +579,9 @@ function paintingEffect(): Cleanup {
 }
 
 export function initScroll() {
+  // The scenes are alive: undo the fail-safe if it fired while this module was still downloading
+  // (it shows everything and switches the pinned scenes off when scripts do not arrive in time).
+  document.documentElement.classList.remove('reveal-fallback');
   timed('header', header);
   timed('rail', chapterRail);
   const fontsWereReady = document.fonts.status === 'loaded';

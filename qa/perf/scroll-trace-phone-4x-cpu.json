@@ -1,12 +1,330 @@
 {
   "scenario": "phone-4x-cpu",
-  "recordedAt": "2026-11-12T15:54:12.236Z",
-  "scrollDurationMs": 34917,
-  "mainThreadTasks": 8800,
-  "longTasksOver50ms": 0,
-  "longestTaskMs": 37.8,
-  "p99TaskMs": 19.2,
-  "p95TaskMs": 17,
-  "tasksOver16ms": 744,
-  "longTasks": []
+  "recordedAt": "2026-11-12T16:18:54.890Z",
+  "scrollDurationMs": 36885,
+  "mainThreadTasks": 7531,
+  "longTasksOver50ms": 32,
+  "longestTaskMs": 107.7,
+  "p99TaskMs": 41.6,
+  "p95TaskMs": 27.1,
+  "tasksOver16ms": 1076,
+  "longTasks": [
+    {
+      "atMs": 407,
+      "durMs": 67,
+      "work": [
+        "ThreadControllerImpl::RunTask 67ms",
+        "Receive mojo message 67ms",
+        "EvaluateScript 66ms",
+        "MinorGC 14ms",
+        "V8.GC_SCAVENGER 13ms",
+        "V8.GC_SCAVENGER_SCAVENGE 13ms"
+      ]
+    },
+    {
+      "atMs": 4085,
+      "durMs": 54.8,
+      "work": [
+        "ThreadControllerImpl::RunTask 55ms",
+        "UpdateLayoutTree 42ms"
+      ]
+    },
+    {
+      "atMs": 4636,
+      "durMs": 60.7,
+      "work": [
+        "ThreadControllerImpl::RunTask 60ms",
+        "UpdateLayoutTree 41ms",
+        "Commit 12ms",
+        "IntersectionObserverController::computeIntersections 9ms"
+      ]
+    },
+    {
+      "atMs": 5098,
+      "durMs": 53.8,
+      "work": [
+        "ThreadControllerImpl::RunTask 54ms",
+        "UpdateLayoutTree 32ms",
+        "PrePaint 13ms"
+      ]
+    },
+    {
+      "atMs": 5601,
+      "durMs": 54.3,
+      "work": [
+        "ThreadControllerImpl::RunTask 54ms",
+        "UpdateLayoutTree 17ms",
+        "Commit 14ms",
+        "IntersectionObserverController::computeIntersections 12ms",
+        "PrePaint 9ms",
+        "FireAnimationFrame 7ms"
+      ]
+    },
+    {
+      "atMs": 6323,
+      "durMs": 72.6,
+      "work": [
+        "ThreadControllerImpl::RunTask 73ms",
+        "UpdateLayoutTree 53ms"
+      ]
+    },
+    {
+      "atMs": 6396,
+      "durMs": 78.2,
+      "work": [
+        "ThreadControllerImpl::RunTask 78ms",
+        "UpdateLayoutTree 58ms",
+        "PrePaint 6ms",
+        "Commit 4ms"
+      ]
+    },
+    {
+      "atMs": 6478,
+      "durMs": 71.6,
+      "work": [
+        "ThreadControllerImpl::RunTask 71ms",
+        "UpdateLayoutTree 39ms",
+        "Commit 14ms",
+        "HitTest 9ms"
+      ]
+    },
+    {
+      "atMs": 7684,
+      "durMs": 60.5,
+      "work": [
+        "ThreadControllerImpl::RunTask 60ms",
+        "UpdateLayoutTree 39ms",
+        "Commit 8ms",
+        "IntersectionObserverController::computeIntersections 7ms"
+      ]
+    },
+    {
+      "atMs": 8951,
+      "durMs": 76.7,
+      "work": [
+        "ThreadControllerImpl::RunTask 77ms",
+        "UpdateLayoutTree 51ms",
+        "Commit 7ms",
+        "EventDispatch 6ms",
+        "FunctionCall 5ms",
+        "IntersectionObserverController::computeIntersections 4ms"
+      ]
+    },
+    {
+      "atMs": 10341,
+      "durMs": 57,
+      "work": [
+        "ThreadControllerImpl::RunTask 57ms",
+        "UpdateLayoutTree 46ms"
+      ]
+    },
+    {
+      "atMs": 12315,
+      "durMs": 51.4,
+      "work": [
+        "ThreadControllerImpl::RunTask 51ms",
+        "PrePaint 17ms",
+        "UpdateLayoutTree 15ms",
+        "Commit 8ms"
+      ]
+    },
+    {
+      "atMs": 12420,
+      "durMs": 82.4,
+      "work": [
+        "ThreadControllerImpl::RunTask 82ms",
+        "UpdateLayoutTree 51ms",
+        "Commit 7ms",
+        "PrePaint 6ms",
+        "IntersectionObserverController::computeIntersections 4ms"
+      ]
+    },
+    {
+      "atMs": 12618,
+      "durMs": 58.9,
+      "work": [
+        "ThreadControllerImpl::RunTask 58ms",
+        "UpdateLayoutTree 32ms",
+        "Commit 12ms",
+        "HitTest 6ms",
+        "IntersectionObserverController::computeIntersections 4ms",
+        "PrePaint 3ms"
+      ]
+    },
+    {
+      "atMs": 15551,
+      "durMs": 54.6,
+      "work": [
+        "ThreadControllerImpl::RunTask 52ms",
+        "UpdateLayoutTree 38ms",
+        "EventDispatch 3ms"
+      ]
+    },
+    {
+      "atMs": 15776,
+      "durMs": 107.7,
+      "work": [
+        "ThreadControllerImpl::RunTask 108ms",
+        "UpdateLayoutTree 53ms",
+        "Commit 14ms",
+        "PrePaint 6ms",
+        "IntersectionObserverController::computeIntersections 3ms"
+      ]
+    },
+    {
+      "atMs": 16445,
+      "durMs": 55.6,
+      "work": [
+        "ThreadControllerImpl::RunTask 56ms",
+        "UpdateLayoutTree 41ms",
+        "PrePaint 4ms"
+      ]
+    },
+    {
+      "atMs": 18022,
+      "durMs": 57,
+      "work": [
+        "ThreadControllerImpl::RunTask 57ms",
+        "UpdateLayoutTree 37ms",
+        "Commit 4ms",
+        "PrePaint 4ms"
+      ]
+    },
+    {
+      "atMs": 18092,
+      "durMs": 52,
+      "work": [
+        "ThreadControllerImpl::RunTask 52ms",
+        "UpdateLayoutTree 29ms",
+        "Commit 6ms",
+        "IntersectionObserverController::computeIntersections 4ms"
+      ]
+    },
+    {
+      "atMs": 18934,
+      "durMs": 87.3,
+      "work": [
+        "ThreadControllerImpl::RunTask 87ms",
+        "UpdateLayoutTree 61ms",
+        "Commit 17ms",
+        "IntersectionObserverController::computeIntersections 5ms",
+        "FireAnimationFrame 3ms"
+      ]
+    },
+    {
+      "atMs": 19061,
+      "durMs": 64.7,
+      "work": [
+        "ThreadControllerImpl::RunTask 64ms",
+        "UpdateLayoutTree 49ms",
+        "Commit 5ms"
+      ]
+    },
+    {
+      "atMs": 19141,
+      "durMs": 67.5,
+      "work": [
+        "ThreadControllerImpl::RunTask 67ms",
+        "UpdateLayoutTree 60ms",
+        "V8.GC_MC_INCREMENTAL_START 25ms",
+        "V8.GC_MC_INCREMENTAL 13ms",
+        "V8.GC_MC_INCREMENTAL_EMBEDDER_TRACING 12ms",
+        "V8.GC_MC_INCREMENTAL 6ms"
+      ]
+    },
+    {
+      "atMs": 20229,
+      "durMs": 60.5,
+      "work": [
+        "ThreadControllerImpl::RunTask 60ms",
+        "Receive mojo message 60ms",
+        "EvaluateScript 59ms"
+      ]
+    },
+    {
+      "atMs": 22919,
+      "durMs": 64.2,
+      "work": [
+        "ThreadControllerImpl::RunTask 64ms",
+        "UpdateLayoutTree 24ms",
+        "HitTest 8ms",
+        "HitTest 8ms"
+      ]
+    },
+    {
+      "atMs": 23586,
+      "durMs": 51,
+      "work": [
+        "ThreadControllerImpl::RunTask 51ms",
+        "UpdateLayoutTree 34ms",
+        "EventDispatch 6ms"
+      ]
+    },
+    {
+      "atMs": 24461,
+      "durMs": 59.7,
+      "work": [
+        "ThreadControllerImpl::RunTask 59ms",
+        "UpdateLayoutTree 34ms",
+        "Commit 8ms",
+        "IntersectionObserverController::computeIntersections 8ms",
+        "PrePaint 7ms"
+      ]
+    },
+    {
+      "atMs": 24523,
+      "durMs": 52.3,
+      "work": [
+        "ThreadControllerImpl::RunTask 52ms",
+        "UpdateLayoutTree 21ms",
+        "FireAnimationFrame 5ms"
+      ]
+    },
+    {
+      "atMs": 24848,
+      "durMs": 52.1,
+      "work": [
+        "ThreadControllerImpl::RunTask 52ms",
+        "UpdateLayoutTree 26ms",
+        "Commit 5ms",
+        "FireAnimationFrame 4ms"
+      ]
+    },
+    {
+      "atMs": 24983,
+      "durMs": 61.5,
+      "work": [
+        "ThreadControllerImpl::RunTask 61ms",
+        "UpdateLayoutTree 44ms",
+        "Commit 7ms"
+      ]
+    },
+    {
+      "atMs": 25640,
+      "durMs": 61.9,
+      "work": [
+        "ThreadControllerImpl::RunTask 62ms",
+        "UpdateLayoutTree 34ms",
+        "Commit 5ms",
+        "FireAnimationFrame 4ms"
+      ]
+    },
+    {
+      "atMs": 25703,
+      "durMs": 75,
+      "work": [
+        "ThreadControllerImpl::RunTask 67ms",
+        "UpdateLayoutTree 42ms"
+      ]
+    },
+    {
+      "atMs": 25963,
+      "durMs": 54.3,
+      "work": [
+        "ThreadControllerImpl::RunTask 54ms",
+        "UpdateLayoutTree 42ms",
+        "PrePaint 4ms"
+      ]
+    }
+  ]
 }

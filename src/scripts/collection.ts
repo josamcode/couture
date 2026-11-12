@@ -80,6 +80,12 @@ export function initCollection() {
 
     await decoded(slug);
     if (mine !== token) return; // a newer selection won; it will do the swap
+    if (prefersReducedMotion()) {
+      // the preference changed while the images were decoding
+      tl?.progress(1);
+      show(slug);
+      return;
+    }
 
     // finish whatever swap is still running, so exactly one spread is on screen before we start
     tl?.progress(1);
@@ -111,6 +117,14 @@ export function initCollection() {
         '<',
       );
   }
+
+  // Reduced motion switched on mid-visit: finish any swap at once and leave exactly one look on show.
+  window.matchMedia('(prefers-reduced-motion: reduce)').addEventListener('change', (e) => {
+    if (!e.matches) return;
+    token++; // cancels a swap that is still waiting for its images
+    tl?.progress(1);
+    show(selected);
+  });
 
   // initial state: only the selected spread is shown (CSS already keeps the others out of the first layout)
   show(selected);

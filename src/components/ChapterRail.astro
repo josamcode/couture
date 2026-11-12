@@ -22,7 +22,7 @@ const chapters = [
     display: none;
   }
   @media (min-width: 64em) {
-    :global(html.js) .rail {
+    :global(html.js:not(.reveal-fallback)) .rail {
       position: fixed;
       top: 50%;
       right: calc(var(--gutter) * 0.4);

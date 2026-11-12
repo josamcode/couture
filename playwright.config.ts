@@ -33,33 +33,33 @@ export default defineConfig({
   projects: [
     {
       name: 'chromium',
-      testIgnore: /perf\.spec\.ts/,
+      testIgnore: /perf(-gpu)?.spec.ts/,
       use: { ...devices['Desktop Chrome'], viewport: { width: 1440, height: 900 }, launchOptions: { args: chromiumArgs } },
     },
     {
       name: 'firefox',
-      testIgnore: /perf\.spec\.ts/,
+      testIgnore: /perf(-gpu)?.spec.ts/,
       use: { ...devices['Desktop Firefox'], viewport: { width: 1440, height: 900 } },
     },
     {
       name: 'webkit',
-      testIgnore: /perf\.spec\.ts/,
+      testIgnore: /perf(-gpu)?.spec.ts/,
       use: { ...devices['Desktop Safari'], viewport: { width: 1440, height: 900 } },
     },
     {
       name: 'mobile-chrome',
-      testIgnore: /perf\.spec\.ts/,
+      testIgnore: /perf(-gpu)?.spec.ts/,
       use: { ...devices['Pixel 7'], launchOptions: { args: chromiumArgs } },
     },
     {
       // Narrow mobile WebKit: the closest thing to Instagram's in-app browser on an iPhone.
       name: 'mobile-safari',
-      testIgnore: /perf\.spec\.ts/,
+      testIgnore: /perf(-gpu)?.spec.ts/,
       use: { ...devices['iPhone 14'] },
     },
     {
       name: 'perf',
-      testMatch: /perf\.spec\.ts/,
+      testMatch: /perf(-gpu)?.spec.ts/,
       fullyParallel: false,
       workers: 1,
       use: { ...devices['Desktop Chrome'], viewport: { width: 1440, height: 900 }, launchOptions: { args: chromiumArgs } },

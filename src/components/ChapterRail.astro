@@ -1,0 +1,77 @@
+---
+// A quiet chapter rail on the right edge (desktop only): I · II · III with a red dot on the current one.
+// Pure wayfinding decoration: the numerals are drawn by CSS and hidden from assistive tech
+// (the header already carries the real navigation). Only shown when JS is running.
+const chapters = [
+  { n: 'I', target: 'top' },
+  { n: 'II', target: 'collection' },
+  { n: 'III', target: 'wardrobe' },
+];
+---
+
+<div class="rail" aria-hidden="true" data-rail data-tone="ink">
+  {
+    chapters.map((c, i) => (
+      <span class:list={['rail__item', { 'is-active': i === 0 }]} data-rail-item={c.target} data-n={c.n} />
+    ))
+  }
+</div>
+
+<style>
+  .rail {
+    display: none;
+  }
+  @media (min-width: 64em) {
+    :global(html.js) .rail {
+      position: fixed;
+      top: 50%;
+      right: calc(var(--gutter) * 0.4);
+      z-index: 40;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1.1rem;
+      transform: translateY(-50%);
+      color: var(--fg);
+      pointer-events: none;
+    }
+  }
+  .rail__item {
+    position: relative;
+    display: block;
+    font-size: 0.6875rem;
+    line-height: 1;
+    letter-spacing: 0.18em;
+    text-align: center;
+    opacity: 0.4;
+    transition: opacity var(--dur-fast) var(--ease-out);
+  }
+  .rail__item::before {
+    content: attr(data-n);
+    margin-inline-end: -0.18em;
+  }
+  /* the red dot: the signature mark, here as "you are here" */
+  .rail__item::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    right: calc(100% + 0.6rem);
+    width: 0.3125rem;
+    height: 0.3125rem;
+    margin-top: -0.15625rem;
+    border-radius: 50%;
+    background: var(--red);
+    opacity: 0;
+    transform: scale(0.3);
+    transition:
+      opacity var(--dur-fast) var(--ease-out),
+      transform var(--dur-fast) var(--ease-out);
+  }
+  .rail__item.is-active {
+    opacity: 1;
+  }
+  .rail__item.is-active::after {
+    opacity: 1;
+    transform: none;
+  }
+</style>

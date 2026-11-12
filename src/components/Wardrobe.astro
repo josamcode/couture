@@ -2,32 +2,104 @@
 // Section III · The wardrobe (ink)
 import TornEdge from './TornEdge.astro';
 import { WARDROBE } from '../data/site';
+import Motes from './Motes.astro';
+
+// The headline is revealed by characters. It is split here, at build time, so the browser never has
+// to measure and re-wrap it: each character is a span with its position (--i) for the stagger.
+// Assistive tech reads the aria-label on the heading; the spans are hidden from it.
+const TITLE = 'Every AI has skills. Few have taste.';
+const titleLines: { text: string; em?: boolean; period?: boolean }[][] = [
+  [{ text: 'Every' }, { text: 'AI' }, { text: 'has' }, { text: 'skills.' }],
+  [{ text: 'Few' }, { text: 'have' }, { text: 'taste', em: true, period: true }],
+];
+let charIndex = 0;
+const nextChar = () => `--i:${charIndex++}`;
 ---
 
 <section id="wardrobe" class="wardrobe" data-tone="ink" data-wardrobe aria-labelledby="wardrobe-title">
   <TornEdge flip />
+  {/* The drawing from Section I returns, faint, behind the closing statement. Decorative. */}
+  <div class="wardrobe__sketch" aria-hidden="true">
+    <picture data-sketch>
+      <source
+        type="image/avif"
+        srcset="/img/hero/lineart-960.avif 960w, /img/hero/lineart-1920.avif 1920w"
+        sizes="(min-width: 64em) 78vw, 150vw"
+      />
+      <source
+        type="image/webp"
+        srcset="/img/hero/lineart-960.webp 960w, /img/hero/lineart-1920.webp 1920w"
+        sizes="(min-width: 64em) 78vw, 150vw"
+      />
+      <img src="/img/hero/lineart-960.webp" width="1920" height="1080" alt="" loading="lazy" decoding="async" />
+    </picture>
+  </div>
+  <Motes count={10} seed={23} />
   <div class="wrap wardrobe__grid">
     <div class="wardrobe__copy">
       <p class="eyebrow">III · The wardrobe</p>
-      <h2 id="wardrobe-title" class="display wardrobe__title" data-wardrobe-title>
-        <span class="wardrobe__line">Every AI has skills.</span>
-        <span class="wardrobe__line">Few have <em>taste</em><span class="period">.</span></span>
+      <h2 id="wardrobe-title" class="display wardrobe__title" data-wardrobe-title aria-label={TITLE}>
+        {
+          titleLines.map((line) => (
+            <span class="wardrobe__line" aria-hidden="true">
+              {line.map((word, w) => (
+                <>
+                  {w > 0 && ' '}
+                  <span class="wardrobe__w">
+                    {word.em ? (
+                      <em>
+                        {[...word.text].map((ch) => (
+                          <span class="wardrobe__ch" data-rise="wardrobe-title" style={nextChar()}>
+                            {ch}
+                          </span>
+                        ))}
+                      </em>
+                    ) : (
+                      [...word.text].map((ch) => (
+                        <span class="wardrobe__ch" data-rise="wardrobe-title" style={nextChar()}>
+                          {ch}
+                        </span>
+                      ))
+                    )}
+                    {word.period && (
+                      <span class="wardrobe__ch period" data-rise="wardrobe-title" style={nextChar()}>
+                        .
+                      </span>
+                    )}
+                  </span>
+                </>
+              ))}
+            </span>
+          ))
+        }
       </h2>
-      <p class="lead wardrobe__body">
+      <p class="lead wardrobe__body" data-rise="wardrobe-body">
         The wardrobe is every look in the collection, plus each new one the day it drops.
       </p>
     </div>
 
-    <div class="card" data-wardrobe-card>
-      <h3 class="eyebrow">The wardrobe</h3>
-      <p class="card__price">
+    <div class="card" data-wardrobe-card data-rise="card" style="--rise-y:36px">
+      <h3 class="eyebrow" data-rise="card" style="--i:2;--rise-y:16px">The wardrobe</h3>
+      <p class="card__price" data-rise="card" style="--i:3;--rise-y:16px">
         <span class="visually-hidden">Price: </span>
         {WARDROBE.price}
       </p>
       <ul class="card__list">
-        {WARDROBE.includes.map((item) => <li>{item}</li>)}
+        {
+          WARDROBE.includes.map((item, n) => (
+            <li data-rise="card" style={`--i:${n + 4};--rise-y:16px`}>
+              {item}
+            </li>
+          ))
+        }
       </ul>
-      <a class="btn btn--solid card__btn" href={WARDROBE.href} data-checkout={WARDROBE.checkout}>
+      <a
+        class="btn btn--solid card__btn"
+        href={WARDROBE.href}
+        data-checkout={WARDROBE.checkout}
+        data-rise="card"
+        style="--i:7;--rise-y:16px"
+      >
         Acquire the wardrobe
       </a>
     </div>
@@ -43,7 +115,37 @@ import { WARDROBE } from '../data/site';
     padding-block: calc(var(--section-pad) + 0.5rem) var(--section-pad);
   }
 
+  .wardrobe__sketch {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+  }
+  .wardrobe__sketch picture {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 150vw;
+    max-width: none;
+    margin: -42vw 0 0 -82vw;
+    opacity: 0.22;
+    /* fade the drawing out towards its edges so it never reads as a box */
+    -webkit-mask-image: radial-gradient(ellipse 58% 62% at 50% 46%, #000 28%, transparent 76%);
+    mask-image: radial-gradient(ellipse 58% 62% at 50% 46%, #000 28%, transparent 76%);
+    will-change: transform, opacity;
+  }
+  .wardrobe__sketch img {
+    width: 100%;
+  }
+  @media (min-width: 64em) {
+    .wardrobe__sketch picture {
+      width: 78vw;
+      margin: -22vw 0 0 -52vw;
+    }
+  }
+
   .wardrobe__grid {
+    position: relative;
     display: grid;
     gap: clamp(3rem, 8vw, 4.5rem);
   }
@@ -56,9 +158,15 @@ import { WARDROBE } from '../data/site';
   .wardrobe__line {
     display: block;
   }
-  /* SplitText characters (created by JS) */
-  .wardrobe__title :global(.wardrobe__ch) {
-    will-change: transform, opacity;
+  /* words never break in the middle; characters are boxes so they can rise one by one */
+  .wardrobe__w {
+    display: inline-block;
+    white-space: nowrap;
+  }
+  .wardrobe__ch {
+    display: inline-block;
+    --rise-y: 0.55em;
+    --rise-step: 18ms;
   }
 
   .wardrobe__body {

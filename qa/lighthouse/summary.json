@@ -1,0 +1,116 @@
+{
+  "mobile": {
+    "passedAssertions": true,
+    "median": {
+      "representative": true,
+      "performance": 99,
+      "accessibility": 100,
+      "bestPractices": 100,
+      "seo": 100,
+      "fcpMs": 1034,
+      "lcpMs": 1988,
+      "tbtMs": 97,
+      "cls": 0,
+      "speedIndexMs": 1679,
+      "report": "2026_11_12_15_47_46-mobile.html"
+    },
+    "runs": [
+      {
+        "representative": false,
+        "performance": 95,
+        "accessibility": 100,
+        "bestPractices": 100,
+        "seo": 100,
+        "fcpMs": 989,
+        "lcpMs": 2780,
+        "tbtMs": 80,
+        "cls": 0,
+        "speedIndexMs": 1654,
+        "report": "2026_11_12_15_48_01-mobile.html"
+      },
+      {
+        "representative": false,
+        "performance": 100,
+        "accessibility": 100,
+        "bestPractices": 100,
+        "seo": 100,
+        "fcpMs": 983,
+        "lcpMs": 1933,
+        "tbtMs": 55,
+        "cls": 0,
+        "speedIndexMs": 1707,
+        "report": "2026_11_12_15_48_15-mobile.html"
+      },
+      {
+        "representative": true,
+        "performance": 99,
+        "accessibility": 100,
+        "bestPractices": 100,
+        "seo": 100,
+        "fcpMs": 1034,
+        "lcpMs": 1988,
+        "tbtMs": 97,
+        "cls": 0,
+        "speedIndexMs": 1679,
+        "report": "2026_11_12_15_47_46-mobile.html"
+      }
+    ]
+  },
+  "desktop": {
+    "passedAssertions": true,
+    "median": {
+      "representative": true,
+      "performance": 100,
+      "accessibility": 100,
+      "bestPractices": 100,
+      "seo": 100,
+      "fcpMs": 309,
+      "lcpMs": 502,
+      "tbtMs": 0,
+      "cls": 0,
+      "speedIndexMs": 545,
+      "report": "2026_11_12_15_48_51-desktop.html"
+    },
+    "runs": [
+      {
+        "representative": false,
+        "performance": 100,
+        "accessibility": 100,
+        "bestPractices": 100,
+        "seo": 100,
+        "fcpMs": 241,
+        "lcpMs": 510,
+        "tbtMs": 0,
+        "cls": 0,
+        "speedIndexMs": 585,
+        "report": "2026_11_12_15_48_36-desktop.html"
+      },
+      {
+        "representative": false,
+        "performance": 100,
+        "accessibility": 100,
+        "bestPractices": 100,
+        "seo": 100,
+        "fcpMs": 309,
+        "lcpMs": 502,
+        "tbtMs": 0,
+        "cls": 0,
+        "speedIndexMs": 549,
+        "report": "2026_11_12_15_49_05-desktop.html"
+      },
+      {
+        "representative": true,
+        "performance": 100,
+        "accessibility": 100,
+        "bestPractices": 100,
+        "seo": 100,
+        "fcpMs": 309,
+        "lcpMs": 502,
+        "tbtMs": 0,
+        "cls": 0,
+        "speedIndexMs": 545,
+        "report": "2026_11_12_15_48_51-desktop.html"
+      }
+    ]
+  }
+}

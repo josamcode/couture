@@ -318,3 +318,33 @@ html.js.motion:not(.is-ready):not(.reveal-fallback) [data-pre-hide] {
   padding-inline-end: 0.06em;
   margin-inline-end: -0.06em;
 }
+
+/* ---------- Reveal on scroll ----------
+   Elements with data-rise start lowered and transparent and rise into place when their group scrolls
+   into view (scroll.ts adds .is-in). Pure CSS transitions: nothing is measured, nothing runs per frame.
+   Only with JS + motion. If the script never arrives, the timer in <head> sets .reveal-fallback and
+   everything is simply shown.
+     --i          position in the group (stagger)
+     --rise-y     how far it travels (default 26px)
+     --rise-o     starting opacity (default 0; 1 for text that rises out of a mask)
+     --rise-step  delay between neighbours (default 70ms) */
+html.js.motion:not(.reveal-fallback) [data-rise]:not(.is-in) {
+  opacity: var(--rise-o, 0);
+  transform: translate3d(0, var(--rise-y, 26px), 0);
+}
+html.js.motion [data-rise] {
+  transition:
+    opacity var(--dur-base) var(--ease-out),
+    transform var(--dur-base) var(--ease-out);
+  transition-delay: calc(var(--i, 0) * var(--rise-step, 70ms));
+}
+/* a clipping window for text that rises out of a mask */
+.mask {
+  display: block;
+  overflow: clip;
+  padding-bottom: 0.14em;
+  margin-bottom: -0.14em;
+}
+.mask > * {
+  display: block;
+}

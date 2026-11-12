@@ -1,13 +1,13 @@
 // Image pipeline for the hero painting.
 //   in : assets-src/hero/painting.(jpg|png|webp)   — any size, ideally 16:9 and ≥ 2560 px wide
-//   out: public/img/hero/painting-{640,1280,1920,2560}.{avif,webp} + painting-1280.jpg (last-resort fallback)
+//   out: public/img/hero/painting-{640,960,1280,1920,2560}.{avif,webp} + painting-1280.jpg (last-resort fallback)
 // Run: npm run images   (this also runs the line-art script afterwards)
 import { existsSync } from 'node:fs';
 import { mkdir, stat } from 'node:fs/promises';
 import path from 'node:path';
 import sharp from 'sharp';
 
-export const WIDTHS = [640, 1280, 1920, 2560];
+export const WIDTHS = [640, 960, 1280, 1920, 2560];
 export const RATIO = 16 / 9;
 export const OUT_DIR = 'public/img/hero';
 
@@ -20,8 +20,8 @@ export function findSource() {
 }
 
 // Quality per width: the small sizes are what phones download, so they are tuned hardest.
-const AVIF_Q = { 640: 64, 1280: 62, 1920: 58, 2560: 54 };
-const WEBP_Q = { 640: 82, 1280: 80, 1920: 78, 2560: 74 };
+const AVIF_Q = { 640: 64, 960: 63, 1280: 62, 1920: 58, 2560: 54 };
+const WEBP_Q = { 640: 82, 960: 81, 1280: 80, 1920: 78, 2560: 74 };
 
 async function main() {
   const src = findSource();

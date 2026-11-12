@@ -1,0 +1,41 @@
+[
+  {
+    "url": "http://localhost:4322/",
+    "isRepresentativeRun": false,
+    "htmlPath": "D:\\MyProjects\\couture\\qa\\lighthouse\\desktop\\2026_11_12_15_48_36-desktop.html",
+    "jsonPath": "D:\\MyProjects\\couture\\qa\\lighthouse\\desktop\\2026_11_12_15_48_36-desktop.json",
+    "summary": {
+      "performance": 1,
+      "accessibility": 1,
+      "best-practices": 1,
+      "seo": 1,
+      "agentic-browsing": 1
+    }
+  },
+  {
+    "url": "http://localhost:4322/",
+    "isRepresentativeRun": false,
+    "htmlPath": "D:\\MyProjects\\couture\\qa\\lighthouse\\desktop\\2026_11_12_15_49_05-desktop.html",
+    "jsonPath": "D:\\MyProjects\\couture\\qa\\lighthouse\\desktop\\2026_11_12_15_49_05-desktop.json",
+    "summary": {
+      "performance": 1,
+      "accessibility": 1,
+      "best-practices": 1,
+      "seo": 1,
+      "agentic-browsing": 1
+    }
+  },
+  {
+    "url": "http://localhost:4322/",
+    "isRepresentativeRun": true,
+    "htmlPath": "D:\\MyProjects\\couture\\qa\\lighthouse\\desktop\\2026_11_12_15_48_51-desktop.html",
+    "jsonPath": "D:\\MyProjects\\couture\\qa\\lighthouse\\desktop\\2026_11_12_15_48_51-desktop.json",
+    "summary": {
+      "performance": 1,
+      "accessibility": 1,
+      "best-practices": 1,
+      "seo": 1,
+      "agentic-browsing": 1
+    }
+  }
+]

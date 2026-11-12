@@ -6,7 +6,7 @@ import { SplitText } from 'gsap/SplitText';
 import { DUR, EASE, STAGGER } from '../data/motion';
 import { initCollection } from './collection';
 import { initCompare } from './compare';
-import { onIdle, prefersReducedMotion } from './state';
+import { nextTask, onIdle, prefersReducedMotion, timed } from './state';
 
 gsap.registerPlugin(SplitText);
 
@@ -76,13 +76,17 @@ function checkoutButtons() {
   });
 }
 
-heroIntro();
-plateIntro();
-initCollection();
-initCompare();
+// Start-up is split into small tasks so the main thread is never held for long on slow phones.
 checkoutButtons();
-
-// Everything scroll-driven comes after the first screen is settled.
-onIdle(() => {
-  import('./scroll').then((m) => m.initScroll());
-});
+timed('hero-intro', heroIntro);
+timed('plate-intro', plateIntro);
+(async () => {
+  await nextTask();
+  timed('collection', initCollection);
+  await nextTask();
+  timed('compare', initCompare);
+  // Everything scroll-driven comes after the first screen is settled.
+  onIdle(() => {
+    import('./scroll').then((mod) => mod.initScroll());
+  });
+})();

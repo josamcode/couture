@@ -25,6 +25,13 @@ export const STAGGER = {
   chars: 0.018,
 } as const;
 
+/**
+ * Scroll-linked (scrubbed) timelines catch up to the scrollbar over this many seconds.
+ * A small lag reads as weight, and it means styles are written on the animation frame,
+ * never inside the scroll event itself (which browsers warn about and cannot composite well).
+ */
+export const SCRUB = 0.35;
+
 /** CSS equivalents of the GSAP eases above (same curves). */
 const CSS_EASE = {
   out: 'cubic-bezier(0.16, 1, 0.3, 1)', // expo.out

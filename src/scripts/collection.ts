@@ -3,6 +3,19 @@ import { gsap } from 'gsap';
 import { DUR, EASE } from '../data/motion';
 import { prefersReducedMotion } from './state';
 
+export interface CollectionApi {
+  slugs: string[];
+  /** Show a look (with the swap transition unless animate is false). */
+  select(slug: string, animate?: boolean): void;
+  /**
+   * While a scroll scene owns the section, index clicks should scroll to the look instead of
+   * swapping in place. The navigator returns true when it has taken care of the request.
+   */
+  setNavigator(fn: ((slug: string) => boolean) | null): void;
+}
+let api: CollectionApi | null = null;
+export const getCollection = () => api;
+
 export function initCollection() {
   const index = document.querySelector<HTMLElement>('[data-look-index]');
   const wrap = document.querySelector<HTMLElement>('[data-spreads]');
@@ -13,7 +26,9 @@ export function initCollection() {
   wrap.querySelectorAll<HTMLElement>('[data-spread]').forEach((el) => spreads.set(el.dataset.spread!, el));
   if (!buttons.length || !spreads.size) return;
 
-  let active = buttons.find((b) => b.getAttribute('aria-pressed') === 'true')?.dataset.look ?? buttons[0].dataset.look!;
+  const initial = buttons.find((b) => b.getAttribute('aria-pressed') === 'true')?.dataset.look ?? buttons[0].dataset.look!;
+  let selected = initial; // what the index says
+  let shown = initial; // what is actually on screen (lags behind while images decode / a swap runs)
   let tl: gsap.core.Timeline | null = null;
   let token = 0;
 
@@ -47,44 +62,47 @@ export function initCollection() {
     spreads.forEach((el, key) => {
       el.hidden = key !== slug;
     });
+    shown = slug;
   };
 
   async function select(slug: string, animate = true) {
-    if (slug === active || !spreads.has(slug)) return;
-    const from = spreads.get(active)!;
-    const to = spreads.get(slug)!;
+    if (slug === selected || !spreads.has(slug)) return;
+    selected = slug;
     const mine = ++token;
-
-    // finish whatever swap is still running, so state is always clean
-    tl?.progress(1);
-    active = slug;
     press(slug);
     warm(slug);
 
     if (!animate || prefersReducedMotion()) {
+      tl?.progress(1);
       show(slug);
       return;
     }
 
     await decoded(slug);
-    if (mine !== token) return; // a newer click won
+    if (mine !== token) return; // a newer selection won; it will do the swap
+
+    // finish whatever swap is still running, so exactly one spread is on screen before we start
+    tl?.progress(1);
+    if (slug === shown) return; // e.g. A → B → A in quick succession
+    const from = spreads.get(shown)!;
+    const to = spreads.get(slug)!;
+    shown = slug;
 
     const frame = to.querySelector<HTMLElement>('.compare');
     to.hidden = false;
-    from.inert = true;
+    // (opacity only, and no inert/visibility flips: each of those would restyle the whole spread)
     tl = gsap
       .timeline({
         onComplete: () => {
           from.hidden = true;
-          from.inert = false;
-          gsap.set([from, to, frame], { clearProps: 'transform,opacity,visibility,clipPath' });
+          gsap.set([from, to, frame], { clearProps: 'transform,opacity,clipPath' });
           tl = null;
         },
       })
       // the old spread lifts and fades
-      .to(from, { y: -20, autoAlpha: 0, duration: DUR.fast, ease: EASE.inOut })
+      .to(from, { y: -20, opacity: 0, duration: DUR.fast, ease: EASE.inOut })
       // the new one arrives
-      .fromTo(to, { y: 20, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: DUR.base, ease: EASE.out })
+      .fromTo(to, { y: 20, opacity: 0 }, { y: 0, opacity: 1, duration: DUR.base, ease: EASE.out })
       // and its comparison images wipe in
       .fromTo(
         frame,
@@ -94,12 +112,27 @@ export function initCollection() {
       );
   }
 
-  // initial state: only the active spread is shown
-  show(active);
+  // initial state: only the selected spread is shown (CSS already keeps the others out of the first layout)
+  show(selected);
+  document.documentElement.classList.add('collection-ready');
+
+  let navigator: ((slug: string) => boolean) | null = null;
+  /** A request from the index: scroll to the look if a scene is running, otherwise swap in place. */
+  const go = (slug: string) => {
+    if (navigator?.(slug)) return;
+    select(slug);
+  };
+  api = {
+    slugs: buttons.map((b) => b.dataset.look!),
+    select: (slug, animate = true) => void select(slug, animate),
+    setNavigator: (fn) => {
+      navigator = fn;
+    },
+  };
 
   buttons.forEach((btn, i) => {
     const slug = btn.dataset.look!;
-    btn.addEventListener('click', () => select(slug));
+    btn.addEventListener('click', () => go(slug));
     btn.addEventListener('pointerenter', () => warm(slug));
     btn.addEventListener('focus', () => warm(slug));
     // Arrow keys walk the index (and select, like tabs do).
@@ -113,7 +146,7 @@ export function initCollection() {
       if (next < 0) return;
       e.preventDefault();
       buttons[next].focus({ preventScroll: true });
-      select(buttons[next].dataset.look!);
+      go(buttons[next].dataset.look!);
     });
   });
 

@@ -6,10 +6,8 @@ import { LOOK_IMAGE_RATIO, LOOK_IMAGE_WIDTHS, type Look } from '../data/looks';
 
 interface Props {
   look: Look;
-  /** Load the images eagerly (only the look that is visible first). */
-  eager?: boolean;
 }
-const { look, eager = false } = Astro.props;
+const { look } = Astro.props;
 const START = 52;
 const id = `compare-${look.slug}`;
 const sizes = '(min-width: 64em) 62vw, 92vw';
@@ -32,7 +30,7 @@ const layers = [
             width={LOOK_IMAGE_RATIO.width}
             height={LOOK_IMAGE_RATIO.height}
             alt={img.alt}
-            loading={eager ? undefined : 'lazy'}
+            loading="lazy"
             decoding="async"
             draggable="false"
           />

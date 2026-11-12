@@ -1,7 +1,7 @@
 // Visual QA: screenshots of every section at four viewports, plus mid-transition frames
 // (painting dissolve, both torn edges). Output: qa/screenshots/<viewport>/NN-name.jpg
 //
-// Needs the built site to be served:  npm run build && npm run preview   (in another terminal)
+// Needs the built site to be served:  npm run build && npm run serve   (in another terminal)
 // Then:                               npm run screenshots   [-- http://localhost:4321] [viewportName]
 import { chromium, webkit } from '@playwright/test';
 import { mkdir } from 'node:fs/promises';
@@ -60,18 +60,27 @@ for (const vp of VIEWPORTS) {
   const pinned = await page.evaluate(() => getComputedStyle(document.querySelector('[data-hero-stage]')).position === 'sticky');
 
   if (pinned) {
-    await scrollTo(H * 0.3);
+    // desktop scene: headline lifts → painting fills the screen → becomes the drawing → paper slides over
+    await scrollTo(H * 0.42, 1300);
+    await shot('hero-painting-growing');
+    await scrollTo(H * 0.95, 1300);
+    await shot('hero-painting-full-bleed');
+    await scrollTo(H * 1.3, 1300);
     await shot('hero-dissolve-mid');
-    await scrollTo(H * 0.75);
-    await shot('hero-lineart');
-    await scrollTo(collectionTop - H * 0.5);
+    await page.mouse.move(vp.width * 0.42, vp.height * 0.4);
+    await scrollTo(H * 1.62, 1500);
+    await shot('hero-lineart-candle');
+    await scrollTo(collectionTop - H * 0.5, 1300);
     await shot('torn-ivory-over-ink');
   } else {
-    await scrollTo(H * 0.28);
+    // phone scene: the plate is held mid-screen, grows, becomes the drawing, the paper rises over it
+    await scrollTo(H * 0.45, 1300);
+    await shot('hero-plate-held');
+    await scrollTo(H * 0.78, 1300);
     await shot('hero-dissolve-mid');
-    await scrollTo(H * 0.6);
+    await scrollTo(H * 1.05, 1500);
     await shot('hero-lineart');
-    await scrollTo(collectionTop - H * 0.55);
+    await scrollTo(collectionTop - H * 0.62, 1300);
     await shot('torn-ivory-over-ink');
   }
 

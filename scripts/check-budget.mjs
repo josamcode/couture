@@ -48,8 +48,12 @@ if (inline.trim()) {
   rows.push(['(inline scripts in index.html)', buf.length, gz, brotliCompressSync(buf).length]);
 }
 
-// What is render-critical: only the entry module referenced by the HTML. Everything else is lazy.
-const entry = [...html.matchAll(/<script[^>]*\bsrc="([^"]+)"/g)].map((m) => m[1]);
+// What loads with the page: scripts referenced by the HTML, plus the preloaded main module.
+// Everything else is lazy.
+const entry = [
+  ...[...html.matchAll(/<script[^>]*\bsrc="([^"]+)"/g)].map((m) => m[1]),
+  ...[...html.matchAll(/<link rel="modulepreload" href="([^"]+)"/g)].map((m) => m[1]),
+];
 
 const kb = (n) => `${(n / KB).toFixed(1)} KB`;
 console.log('\nJavaScript (raw / gzip / brotli)');
@@ -80,9 +84,9 @@ for (const [label, value, max] of checks) {
 }
 
 // The entry chunk must not pull in the lazy libraries.
-const entryFile = rows.find(([name]) => entry.some((e) => e.endsWith(path.basename(name))));
-if (entryFile) {
-  const src = await readFile(path.join(DIST, entryFile[0]), 'utf8');
+const entryFiles = rows.filter(([name]) => entry.some((e) => e.endsWith(path.basename(name))));
+if (entryFiles.length) {
+  const src = (await Promise.all(entryFiles.map((f) => readFile(path.join(DIST, f[0]), 'utf8')))).join('\n');
   for (const [lib, probe] of [
     ['OGL', 'unable to create webgl context'],
     ['Lenis', 'lenis-smooth'],

@@ -12,7 +12,21 @@ interface CompareApi {
   sweep(): void;
 }
 
+/** What the scroll scene may do with a comparison frame. */
+export interface CompareControl {
+  /** Move the divider because the page scrolled (keeps the input in step). */
+  follow(v: number): void;
+  /** true once the visitor has moved the divider themselves: scroll must then leave it alone. */
+  touched: boolean;
+  value(): number;
+}
+export const compareControls = new Map<string, CompareControl>();
+
 let sweepDone = false;
+/** The scroll scene teaches the same thing better than the one-off sweep, so it can switch it off. */
+export const disableSweep = () => {
+  sweepDone = true;
+};
 
 function setup(frame: HTMLElement): CompareApi | null {
   const range = frame.querySelector<HTMLInputElement>('[data-compare-range]');
@@ -40,9 +54,25 @@ function setup(frame: HTMLElement): CompareApi | null {
     sweepTl = null;
   };
 
+  const control: CompareControl = {
+    touched: false,
+    value: () => Number(range.value),
+    follow(v) {
+      paint(v);
+      const r = String(Math.round(clamp(v)));
+      if (r !== range.value) {
+        range.value = r;
+        range.setAttribute('aria-valuetext', `Divider at ${r} percent`);
+      }
+    },
+  };
+  const slug = frame.closest<HTMLElement>('[data-spread]')?.dataset.spread;
+  if (slug) compareControls.set(slug, control);
+
   // Keyboard / assistive tech: the input moved itself, mirror it.
   range.addEventListener('input', () => {
     stopSweep();
+    control.touched = true;
     commit(Number(range.value));
   });
 
@@ -63,6 +93,7 @@ function setup(frame: HTMLElement): CompareApi | null {
   };
   const beginDrag = (e: PointerEvent) => {
     dragging = true;
+    control.touched = true;
     frame.setPointerCapture(e.pointerId);
     frame.classList.add('is-dragging');
   };
@@ -85,6 +116,7 @@ function setup(frame: HTMLElement): CompareApi | null {
   frame.addEventListener('pointerdown', (e) => {
     if (e.pointerType === 'mouse' && e.button !== 0) return;
     stopSweep();
+    if (e.pointerType !== 'touch') control.touched = true;
     rect = frame.getBoundingClientRect();
     active = true;
     startX = e.clientX;
@@ -109,7 +141,12 @@ function setup(frame: HTMLElement): CompareApi | null {
   });
   frame.addEventListener('pointerup', end);
   frame.addEventListener('pointercancel', end);
-  frame.addEventListener('lostpointercapture', end);
+  // Touch pointers are implicitly captured by the element they landed on (an image, a label).
+  // Taking the capture makes THAT element fire lostpointercapture, which bubbles up to the frame:
+  // only treat it as the end of the drag when the frame itself lost the pointer.
+  frame.addEventListener('lostpointercapture', (e) => {
+    if (e.target === frame) end(e);
+  });
   // Images inside must never start a native drag.
   frame.addEventListener('dragstart', (e) => e.preventDefault());
 

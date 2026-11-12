@@ -4,6 +4,7 @@ import '../styles/global.css';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import TornDefs from '../components/TornDefs.astro';
+import ChapterRail from '../components/ChapterRail.astro';
 import { SITE } from '../data/site';
 import { motionCss } from '../data/motion';
 import { HERO_SIZES, heroSrcset } from '../data/hero';
@@ -45,8 +46,8 @@ const ogImage = site ? new URL('/og.png', site).href : '/og.png';
         c.add('js');
         if (!w.matchMedia('(prefers-reduced-motion: reduce)').matches) c.add('motion');
         w.setTimeout(function () {
-          c.add('reveal-fallback');
-        }, 3500);
+          if (!c.contains('scroll-ready')) c.add('reveal-fallback');
+        }, 4000);
       })(document, window);
     </script>
 
@@ -76,12 +77,16 @@ const ogImage = site ? new URL('/og.png', site).href : '/og.png';
     <a class="skip-link" href="#main">Skip to content</a>
     <TornDefs />
     <Header />
+    <ChapterRail />
     <main id="main">
       <slot />
     </main>
     <Footer />
     <script>
-      import '../scripts/main.ts';
+      // Boot after the first frame is on screen, so the page paints before any script work is done.
+      // (The module itself is fetched early through a modulepreload link added by scripts/postbuild.mjs.)
+      const boot = () => import('../scripts/main.ts');
+      requestAnimationFrame(() => requestAnimationFrame(boot));
     </script>
   </body>
 </html>

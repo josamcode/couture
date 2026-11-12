@@ -3,14 +3,20 @@
 import TornEdge from './TornEdge.astro';
 import Compare from './Compare.astro';
 import { LOOKS } from '../data/looks';
+import Motes from './Motes.astro';
 ---
 
 <section id="collection" class="collection" data-tone="ivory" data-collection aria-labelledby="collection-title">
   <TornEdge />
-  <div class="wrap">
+  <Motes count={8} seed={41} tone="ink" />
+  <div class="wrap" data-collection-wrap>
     <header class="collection__head">
       <p class="eyebrow">II · The collection</p>
-      <h2 id="collection-title" class="display collection__title">Looks, cut for <em>your</em> AI.</h2>
+      <h2 id="collection-title" class="display collection__title">
+        <span class="mask">
+          <span data-rise="collection-title" style="--rise-y:108%;--rise-o:1">Looks, cut for <em>your</em> AI.</span>
+        </span>
+      </h2>
     </header>
 
     <div class="collection__grid">
@@ -19,7 +25,7 @@ import { LOOKS } from '../data/looks';
         <ol class="look-index__list look-index__list--js">
           {
             LOOKS.map((look, i) => (
-              <li class="look-index__item">
+              <li class="look-index__item" data-rise="index" style={`--i:${i};--rise-y:18px;--rise-step:60ms`}>
                 <button
                   class="look-index__btn"
                   type="button"
@@ -52,36 +58,47 @@ import { LOOKS } from '../data/looks';
         </noscript>
       </nav>
 
-      <div class="spreads" data-spreads>
+      <div class="spreads" data-spreads style={`--looks:${LOOKS.length}`}>
         {
-          LOOKS.map((look, i) => (
+          LOOKS.map((look) => (
             <article
               class="spread"
               id={`look-${look.slug}`}
               data-spread={look.slug}
               aria-labelledby={`look-${look.slug}-name`}
             >
+              {/* a giant numeral behind the spread; drawn by CSS, so it is pure decoration */}
+              <span class="spread__ghost" aria-hidden="true" data-ghost data-numeral={look.numeral} />
               <header class="spread__head" data-spread-head>
-                <p class="eyebrow">Look {look.numeral}</p>
-                <h3 id={`look-${look.slug}-name`} class="display spread__name">
+                <p class="eyebrow" data-rise="head" style="--rise-y:34px;--rise-step:90ms">
+                  Look {look.numeral}
+                </p>
+                <h3
+                  id={`look-${look.slug}-name`}
+                  class="display spread__name"
+                  data-rise="head"
+                  style="--i:1;--rise-y:34px;--rise-step:90ms"
+                >
                   {look.name}
                 </h3>
-                <p class="lead spread__tagline">{look.tagline}</p>
+                <p class="lead spread__tagline" data-rise="head" style="--i:2;--rise-y:34px;--rise-step:90ms">
+                  {look.tagline}
+                </p>
               </header>
 
-              <div class="spread__compare">
-                <Compare look={look} eager={i === 0} />
+              <div class="spread__compare" data-spread-compare>
+                <Compare look={look} />
               </div>
-              <p class="spread__note">
+              <p class="spread__note" data-rise="note" style="--rise-y:14px">
                 <span>Same prompt. Same AI. Only one wore the look. Drag to compare.</span>
                 {look.placeholder && <span class="label spread__flag">Illustrative preview</span>}
               </p>
 
               <div class="box">
-                <h4 class="eyebrow">In the box</h4>
+                <h4 class="eyebrow" data-rise="box">In the box</h4>
                 <dl class="box__grid">
-                  {look.contents.map((item) => (
-                    <div class="box__item">
+                  {look.contents.map((item, n) => (
+                    <div class="box__item" data-rise="box" style={`--i:${n + 1}`}>
                       <dt>{item.title}</dt>
                       <dd>{item.text}</dd>
                     </div>
@@ -90,11 +107,17 @@ import { LOOKS } from '../data/looks';
               </div>
 
               <div class="spread__buy">
-                <p class="spread__price">
+                <p class="spread__price" data-rise="buy" style="--rise-y:18px">
                   <span class="visually-hidden">Price: </span>
                   {look.price}
                 </p>
-                <a class="btn btn--solid" href={look.href} data-checkout={`look-${look.slug}`}>
+                <a
+                  class="btn btn--solid"
+                  href={look.href}
+                  data-checkout={`look-${look.slug}`}
+                  data-rise="buy"
+                  style="--i:1;--rise-y:18px"
+                >
                   Acquire look {look.numeral}
                 </a>
               </div>
@@ -107,6 +130,16 @@ import { LOOKS } from '../data/looks';
 </section>
 
 <style>
+  /* paper grain: a tiny repeating tile, so the ivory reads as a sheet of paper, not a flat colour */
+  .collection::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: url('/img/paper-grain.webp') repeat;
+    background-size: 128px 128px;
+    opacity: 0.55;
+    pointer-events: none;
+  }
   .collection {
     position: relative;
     z-index: 2;
@@ -247,7 +280,40 @@ import { LOOKS } from '../data/looks';
     min-width: 0;
   }
   .spread {
+    position: relative;
     min-width: 0;
+  }
+  .spread > :global(*) {
+    position: relative;
+  }
+  .spread > .spread__ghost {
+    position: absolute;
+    top: -0.16em;
+    right: -0.02em;
+    font-family: var(--font-display);
+    font-size: clamp(13rem, 58vw, 22rem);
+    line-height: 0.8;
+    letter-spacing: -0.04em;
+    color: var(--line);
+    pointer-events: none;
+    user-select: none;
+    will-change: transform;
+  }
+  .spread__ghost::before {
+    content: attr(data-numeral);
+  }
+  @media (min-width: 64em) {
+    .spread > .spread__ghost {
+      font-size: clamp(22rem, 33vw, 40rem);
+    }
+  }
+  /* the comparison frame tilts up off the table as it scrolls in */
+  .spread__compare {
+    perspective: 1400px;
+  }
+  .spread__compare > :global(*) {
+    transform-origin: 50% 100%;
+    will-change: transform;
   }
   /* With JS the spreads share one cell so they can cross-fade; hidden ones are removed. */
   :global(html.js) .spread {
@@ -255,6 +321,14 @@ import { LOOKS } from '../data/looks';
   }
   .spread[hidden] {
     display: none;
+  }
+  /* Before the script takes over, keep looks II–VI out of the first layout (a much smaller first render).
+     `reveal-fallback` is set by a timer in <head>: if the script never arrives, every look is shown. */
+  :global(html.js:not(.collection-ready):not(.reveal-fallback)) .spread + .spread {
+    display: none;
+  }
+  :global(html.js.reveal-fallback:not(.collection-ready)) .spread {
+    grid-area: auto;
   }
   /* Without JS all six are stacked, separated by a hairline. */
   :global(html:not(.js)) .spread + .spread {
@@ -336,10 +410,111 @@ import { LOOKS } from '../data/looks';
     letter-spacing: -0.01em;
   }
 
+  /* Desktop: the price and the buy button sit at the top right of the spread, level with the look's name,
+     so they stay in view while the looks change. */
+  @media (min-width: 64em) {
+    .spread > .spread__buy {
+      position: absolute;
+      top: 0.25rem;
+      right: 0;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 1.1rem;
+      margin: 0;
+      padding: 0;
+      border: 0;
+    }
+    .spread__head {
+      padding-inline-end: 17rem;
+    }
+    .spread > .spread__ghost {
+      top: 26%;
+    }
+  }
+
+  /* ---------- The fitting room ----------
+     With JS + motion, the spread is held on screen (CSS sticky) over a long runway, and scrolling
+     walks through the looks one by one while each page gets dressed (see collectionScene in scroll.ts).
+     Without JS or with reduced motion none of this applies: the section is a normal page. */
+  @media (max-width: 63.99em) and (min-height: 30em) {
+    :global(html.js.motion) .collection__grid {
+      grid-template-rows: 4.25rem auto;
+      row-gap: 0.75rem;
+    }
+    /* the chips stay reachable for the whole section */
+    :global(html.js.motion) .look-index {
+      grid-row: 1 / 3;
+      align-self: start;
+      position: sticky;
+      top: 0;
+      z-index: 5;
+      background: var(--bg);
+      border-bottom: 1px solid var(--line);
+    }
+    :global(html.js.motion) .spreads {
+      grid-row: 2;
+      --seg: 72svh;
+      --stick: 4.9rem;
+      grid-template-rows: auto calc(var(--looks) * var(--seg));
+    }
+    :global(html.js.motion) .spread {
+      grid-area: 1 / 1 / 3 / 2;
+      align-self: start;
+      position: sticky;
+      top: var(--stick);
+      /* on phones the price and the buy button come straight after the frame, so they are on
+         screen while the looks change (the note and "In the box" follow below) */
+    }
+    :global(html.js.motion) .spread:not([hidden]) {
+      display: flex;
+      flex-direction: column;
+    }
+    :global(html.js.motion) .spread > .spread__buy {
+      order: 1;
+      margin-top: 1.1rem;
+      padding-top: 0;
+      border-top: 0;
+      gap: 0.75rem 1.25rem;
+    }
+    :global(html.js.motion) .spread > .spread__note {
+      order: 2;
+      margin-top: 1.5rem;
+    }
+    :global(html.js.motion) .spread > .box {
+      order: 3;
+    }
+    :global(html.js.motion) .spread__compare {
+      margin-top: 1.5rem;
+    }
+  }
+  @media (min-width: 64em) and (min-height: 38.75em) {
+    :global(html.js.motion) .spreads {
+      --seg: 85svh;
+      --stick: calc(var(--header-h) + 1.5rem);
+      grid-template-rows: auto calc(var(--looks) * var(--seg));
+    }
+    :global(html.js.motion) .spread {
+      grid-area: 1 / 1 / 3 / 2;
+      align-self: start;
+      position: sticky;
+      top: var(--stick);
+    }
+    /* the frame takes the height that is left on screen under the look's name */
+    :global(html.js.motion) .spread__compare {
+      width: min(100%, calc((100svh - var(--header-h) - 1.5rem - var(--fs-name) * 1.08 - 11.5rem) * 1.6));
+    }
+  }
+
   /* Desktop curtain: the paper overlaps the held hero stage and slides over it (see Hero.astro). */
   @media (min-width: 64em) and (min-height: 38.75em) {
     :global(html.js.motion) .collection {
       margin-top: -100svh;
+    }
+  }
+  /* Phones: the paper rises over the painting while it is held mid-screen. */
+  @media (max-width: 63.99em) and (min-height: 30em) {
+    :global(html.js.motion) .collection {
+      margin-top: -80svh;
     }
   }
 </style>

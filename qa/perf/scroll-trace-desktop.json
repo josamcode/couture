@@ -1,0 +1,12 @@
+{
+  "scenario": "desktop",
+  "recordedAt": "2026-11-12T15:53:20.780Z",
+  "scrollDurationMs": 13260,
+  "mainThreadTasks": 5085,
+  "longTasksOver50ms": 0,
+  "longestTaskMs": 43.8,
+  "p99TaskMs": 19.6,
+  "p95TaskMs": 6.3,
+  "tasksOver16ms": 146,
+  "longTasks": []
+}

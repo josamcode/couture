@@ -7,6 +7,13 @@ const demoPreviews = LOOKS.some((l) => l.placeholder);
 ---
 
 <footer class="site-footer" data-tone="ink">
+  {/* The closing signature: the wordmark at full width. Decorative (the header carries the real one). */}
+  <div class="site-footer__sign" aria-hidden="true" data-sign>
+    <span class="site-footer__sign-inner" data-sign-inner>
+      <span class="site-footer__couture" data-sign-word>Couture</span><span class="site-footer__dot" data-sign-dot
+      ></span><span class="site-footer__ui" data-sign-ui>UI</span>
+    </span>
+  </div>
   <div class="wrap site-footer__row">
     <p>© {SITE.year} {SITE.name}</p>
     <p>
@@ -34,11 +41,45 @@ const demoPreviews = LOOKS.some((l) => l.placeholder);
     position: relative;
     background: var(--bg);
     color: var(--muted);
-    border-top: 1px solid var(--line);
     font-size: 0.8125rem;
     line-height: 1.5;
     letter-spacing: 0.04em;
   }
+  .site-footer__sign {
+    overflow: hidden;
+    padding: clamp(2rem, 6vw, 5rem) var(--gutter) clamp(1.25rem, 3vw, 2.5rem);
+    border-bottom: 1px solid var(--line);
+    color: var(--ivory);
+  }
+  .site-footer__sign-inner {
+    display: flex;
+    align-items: baseline;
+    justify-content: center;
+    white-space: nowrap;
+    line-height: 0.86;
+    font-size: clamp(4rem, 19.6vw, 24rem);
+  }
+  .site-footer__couture {
+    font-family: var(--font-display);
+    letter-spacing: -0.03em;
+    padding-block: 0.06em 0.1em;
+  }
+  .site-footer__dot {
+    flex: none;
+    width: 0.17em;
+    height: 0.17em;
+    margin-inline: 0.05em 0.12em;
+    border-radius: 50%;
+    background: var(--red);
+  }
+  .site-footer__ui {
+    font-family: var(--font-text);
+    font-weight: 500;
+    font-size: 0.27em;
+    letter-spacing: 0.3em;
+    margin-inline-end: -0.3em;
+  }
+
   .site-footer__row {
     display: flex;
     flex-wrap: wrap;

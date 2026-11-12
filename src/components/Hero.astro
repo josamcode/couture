@@ -2,17 +2,19 @@
 // Section I · The atelier (ink)
 import { HERO_ARTWORK } from '../data/credits';
 import { HERO_SIZES, HERO_FALLBACK, heroSrcset } from '../data/hero';
+import Motes from './Motes.astro';
 ---
 
 <section id="top" class="hero" data-tone="ink" data-hero aria-labelledby="hero-title">
   <div class="hero__stage" data-hero-stage>
+    <Motes count={14} seed={7} />
     <div class="hero__inner wrap" data-hero-inner>
       <p class="eyebrow hero__eyebrow" data-hero-eyebrow>I · The atelier</p>
 
       <h1 id="hero-title" class="display hero__title" data-hero-title data-pre-hide>
         {/* Bodoni Moda has no U+2011 glyph (a fallback font would draw it), so the hyphens are plain and the word is kept unbreakable with nowrap. */}
-        <span class="hero__line">AI makes <span class="nobr">off-the-rack.</span></span>
-        <span class="hero__line">We make <em>couture</em><span class="period">.</span></span>
+        <span class="hero__line" data-hero-line>AI makes <span class="nobr">off-the-rack.</span></span>
+        <span class="hero__line" data-hero-line>We make <em>couture</em><span class="period">.</span></span>
       </h1>
 
       <div class="hero__lower">
@@ -29,7 +31,7 @@ import { HERO_SIZES, HERO_FALLBACK, heroSrcset } from '../data/hero';
 
         <div class="hero__figure-cell">
           <figure class="plate" data-plate>
-            <div class="plate__frame">
+            <div class="plate__frame" data-plate-frame>
               <span class="plate__corner plate__corner--tl" aria-hidden="true"></span>
               <span class="plate__corner plate__corner--tr" aria-hidden="true"></span>
               <span class="plate__corner plate__corner--bl" aria-hidden="true"></span>
@@ -47,7 +49,6 @@ import { HERO_SIZES, HERO_FALLBACK, heroSrcset } from '../data/hero';
                       alt={HERO_ARTWORK.alt}
                       fetchpriority="high"
                       loading="eager"
-                      decoding="async"
                       data-plate-img
                       data-lineart-sm="/img/hero/lineart-1280.webp"
                       data-lineart-lg="/img/hero/lineart-1920.webp"
@@ -56,7 +57,7 @@ import { HERO_SIZES, HERO_FALLBACK, heroSrcset } from '../data/hero';
                 </div>
               </div>
             </div>
-            <figcaption class="plate__caption">
+            <figcaption class="plate__caption" data-plate-caption>
               <span class="label">Fig. I — The fitting</span>
               <span class="label">Scroll to enter</span>
             </figcaption>
@@ -73,6 +74,13 @@ import { HERO_SIZES, HERO_FALLBACK, heroSrcset } from '../data/hero';
     z-index: 1;
     background: var(--bg);
     color: var(--fg);
+    overflow: clip; /* the painting grows past the stage on scroll */
+  }
+  .hero__stage {
+    position: relative;
+  }
+  .hero__inner {
+    position: relative;
   }
 
   .hero__stage {
@@ -212,6 +220,27 @@ import { HERO_SIZES, HERO_FALLBACK, heroSrcset } from '../data/hero';
     color: var(--muted);
   }
 
+  /* ---------- Phones and tablets: the painting holds in the middle of the screen while it
+     turns into a drawing, then the paper rises over it. CSS sticky, only with JS + motion. ---------- */
+  @media (max-width: 63.99em) and (min-height: 30em) {
+    :global(html.js.motion) .hero__stage {
+      padding-bottom: 0;
+    }
+    /* the runway the painting is held over. It has to be real content (a sticky box can only travel
+       inside its container's content area, not its padding), so it is an empty flex item. */
+    :global(html.js.motion) .hero__lower::after {
+      content: '';
+      flex: none;
+      height: 160svh;
+    }
+    :global(html.js.motion) .hero__figure-cell {
+      position: sticky;
+      z-index: 2;
+      /* centres the 16:9 plate: half the screen minus half the plate */
+      top: calc(50svh - (100vw - 2 * var(--gutter)) * 0.28125 - 1.1rem);
+    }
+  }
+
   /* ---------- Desktop: one composed screen ---------- */
 
   @media (min-width: 64em) and (min-height: 38.75em) {
@@ -252,7 +281,14 @@ import { HERO_SIZES, HERO_FALLBACK, heroSrcset } from '../data/hero';
     /* The curtain: the stage holds still while the painting dissolves, then the paper slides over it.
        Pure CSS sticky (no JS pinning). Only when JS + motion are on; otherwise the section is one screen tall. */
     :global(html.js.motion) .hero {
-      height: 260svh;
+      /* 100svh stage + 160svh for the scene (the painting fills the screen, then becomes a drawing)
+         + 100svh for the paper to slide over it */
+      height: 360svh;
+    }
+    :global(html.js.motion) .plate {
+      position: relative;
+      z-index: 2;
+      will-change: transform;
     }
     :global(html.js.motion) .hero__stage {
       position: sticky;

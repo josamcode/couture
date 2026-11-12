@@ -1,0 +1,41 @@
+[
+  {
+    "url": "http://localhost:4322/",
+    "isRepresentativeRun": false,
+    "htmlPath": "D:\\MyProjects\\couture\\qa\\lighthouse\\mobile\\2026_11_12_15_48_01-mobile.html",
+    "jsonPath": "D:\\MyProjects\\couture\\qa\\lighthouse\\mobile\\2026_11_12_15_48_01-mobile.json",
+    "summary": {
+      "performance": 0.95,
+      "accessibility": 1,
+      "best-practices": 1,
+      "seo": 1,
+      "agentic-browsing": 1
+    }
+  },
+  {
+    "url": "http://localhost:4322/",
+    "isRepresentativeRun": false,
+    "htmlPath": "D:\\MyProjects\\couture\\qa\\lighthouse\\mobile\\2026_11_12_15_48_15-mobile.html",
+    "jsonPath": "D:\\MyProjects\\couture\\qa\\lighthouse\\mobile\\2026_11_12_15_48_15-mobile.json",
+    "summary": {
+      "performance": 1,
+      "accessibility": 1,
+      "best-practices": 1,
+      "seo": 1,
+      "agentic-browsing": 1
+    }
+  },
+  {
+    "url": "http://localhost:4322/",
+    "isRepresentativeRun": true,
+    "htmlPath": "D:\\MyProjects\\couture\\qa\\lighthouse\\mobile\\2026_11_12_15_47_46-mobile.html",
+    "jsonPath": "D:\\MyProjects\\couture\\qa\\lighthouse\\mobile\\2026_11_12_15_47_46-mobile.json",
+    "summary": {
+      "performance": 0.99,
+      "accessibility": 1,
+      "best-practices": 1,
+      "seo": 1,
+      "agentic-browsing": 1
+    }
+  }
+]

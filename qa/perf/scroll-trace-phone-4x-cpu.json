@@ -1,0 +1,12 @@
+{
+  "scenario": "phone-4x-cpu",
+  "recordedAt": "2026-11-12T15:54:12.236Z",
+  "scrollDurationMs": 34917,
+  "mainThreadTasks": 8800,
+  "longTasksOver50ms": 0,
+  "longestTaskMs": 37.8,
+  "p99TaskMs": 19.2,
+  "p95TaskMs": 17,
+  "tasksOver16ms": 744,
+  "longTasks": []
+}

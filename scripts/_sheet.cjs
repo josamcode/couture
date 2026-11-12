@@ -1,0 +1,4 @@
+// dev helper: contact sheet from qa screenshots → scratchpad
+const sharp=require('sharp');const path=require('node:path');const fs=require('node:fs');const S=path.join(require('node:os').tmpdir(),'couture-contact-sheets')+path.sep;fs.mkdirSync(S,{recursive:true});
+const [dir,out,cols,w,...files]=process.argv.slice(2);
+(async()=>{const C=+cols,W=+w;const metas=await Promise.all(files.map(async f=>{const b=await sharp('qa/screenshots/'+dir+'/'+f).resize(W).toBuffer();const m=await sharp(b).metadata();return {b,h:m.height}}));const h=Math.max(...metas.map(m=>m.h));const rows=Math.ceil(files.length/C);await sharp({create:{width:W*C+8*(C-1),height:h*rows+8*(rows-1),channels:3,background:'#555'}}).composite(metas.map((m,i)=>({input:m.b,left:(i%C)*(W+8),top:Math.floor(i/C)*(h+8)}))).jpeg({quality:78}).toFile(S+out);console.log(S+out)})()

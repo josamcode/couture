@@ -17,12 +17,12 @@ export const LOOKS = [
 const BROWSER_NOISE = [/GL Driver Message .*GPU stall due to ReadPixels/];
 
 /** Collect every console error/warning and uncaught exception from the page. */
-export function watchConsole(page: Page) {
+export function watchConsole(page: Page, alsoIgnore: RegExp[] = []) {
   const problems: string[] = [];
   page.on('console', (msg: ConsoleMessage) => {
     if (msg.type() !== 'error' && msg.type() !== 'warning') return;
     const text = msg.text();
-    if (BROWSER_NOISE.some((re) => re.test(text))) return;
+    if ([...BROWSER_NOISE, ...alsoIgnore].some((re) => re.test(text))) return;
     problems.push(`[${msg.type()}] ${text}`);
   });
   page.on('pageerror', (err) => problems.push(`[pageerror] ${err.message}`));

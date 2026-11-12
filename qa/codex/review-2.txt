@@ -1,0 +1,55 @@
+(node:36820) [DEP0190] DeprecationWarning: Passing args to a child process with shell option true can lead to security vulnerabilities, as the arguments are not escaped, only concatenated.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+[codex] Starting Codex task thread.
+[codex] Thread ready (01a1d092-4c68-7db1-8d52-e5b829e548a8).
+[codex] Turn started (01a1d092-585c-7ca1-bc7a-a296bc055f3a).
+[codex] Assistant message captured: I’ll inspect the diff, trace the four fixes through their failure paths, and check what the r...
+[codex] Running command: "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe" -Command 'git status --short...
+[codex] Running command: "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe" -Command "rg -n \"couture\" ...
+[codex] Command completed: "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe" -Command 'git status --short... (exit 0)
+[codex] Command completed: "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe" -Command "rg -n \"couture\" ... (exit 0)
+[codex] Running command: "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe" -Command 'Get-Content AGENTS...
+[codex] Command completed: "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe" -Command 'Get-Content AGENTS... (exit 0)
+[codex] Searching:
+[codex] Running command: "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe" -Command 'Get-Content src/sc...
+[codex] Running command: "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe" -Command 'Get-Content src/co...
+[codex] Command completed: "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe" -Command 'Get-Content src/sc... (exit 0)
+[codex] Command completed: "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe" -Command 'Get-Content src/co... (exit 0)
+[codex] Assistant message captured: The collection swap now rechecks reduced motion and settles active transitions, and the OG im...
+[codex] Running command: "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe" -Command 'Get-Content src/co...
+[codex] Command completed: "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe" -Command 'Get-Content src/co... (exit 0)
+[codex] Running command: "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe" -Command "@' const {chromium...
+[codex] Command failed: "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe" -Command "@' const {chromium... (exit 1)
+[codex] Running command: "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe" -Command 'Get-Content qa/per...
+[codex] Command completed: "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe" -Command 'Get-Content qa/per... (exit 0)
+[codex] Assistant message captured: The new fit logic has a gap: its width formula can collapse the preview to zero with enlarged...
+[codex] Running command: "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe" -Command '$targets = @(@('"'...
+[codex] Command completed: "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe" -Command '$targets = @(@('"'... (exit 0)
+[codex] Running command: "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe" -Command "@' const fs = requ...
+[codex] Command completed: "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe" -Command "@' const fs = requ... (exit 0)
+[codex] Running command: "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe" -Command '$i=0; Get-Content ...
+[codex] Command completed: "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe" -Command '$i=0; Get-Content ... (exit 0)
+[codex] Assistant message captured: { "verdict": "needs-attention", "summary": "Do not ship yet: enlarged-text previews can colla...
+[codex] Turn completion inferred after the main thread finished and subagent work drained.
+# Codex Adversarial Review
+
+Target: branch diff against 29fc5d9
+Verdict: needs-attention
+
+Do not ship yet: enlarged-text previews can collapse, scroll swaps can discard keyboard focus, and the startup performance gate excludes critical work. The blocked-script and collection reduced-motion fixes are supported by source; the committed OG image is valid. Browser validation was blocked by sandbox permissions.
+
+Findings:
+- [medium] Enlarged text can collapse the comparison preview (src/components/Collection.astro:491-495)
+  At 600×500 with a 32px root font, this width calculation evaluates to −490px and clamps to zero. The .is-plain fallback resets positioning but retains this width constraint, so disabling stickiness does not restore the preview. This follows from the CSS calculation; existing tests neither enlarge text nor assert a usable frame size.
+  Recommendation: Require a usable minimum preview size before enabling the scene, and restore full-width comparisons in plain mode. Test enlarged text and actual preview dimensions.
+- [medium] Automatic look swaps hide the focused control (src/scripts/scroll.ts:367-371)
+  Scroll-driven selection runs without checking focus inside the outgoing spread. Focusing an Acquire link and paging across a look boundary schedules a swap whose completion sets from.hidden=true. The focused control disappears without focus preservation or transfer, disrupting keyboard navigation. Existing keyboard tests exercise index buttons, which remain outside the hidden spreads.
+  Recommendation: Suspend automatic swaps while focus is inside a spread, or implement deliberate focus preservation. Test paging and scrolling while the comparison input and purchase link are focused.
+- [medium] Startup performance test discards the startup window (tests/perf-gpu.spec.ts:69-78)
+  The test triggers pointer movement immediately after tracing starts, then excludes tasks beginning in the first 250ms—the window where that movement wakes WebGL. Applying this filter to a synthetic 120ms startup task produces no reported long tasks. Missing renderer metadata also yields an empty task list and a passing assertion, so this gate cannot establish its claimed startup limit.
+  Recommendation: Wait out tracing initialization before triggering interaction, mark the interaction boundary, and include every task overlapping startup. Assert valid renderer metadata and a nonempty recording.
+
+Next steps:
+- Fix preview sizing and focus preservation, then run targeted browser regressions.
+- Correct the startup measurement window and rerun the hardware-GPU gate.
+exit 0

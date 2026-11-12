@@ -58,11 +58,29 @@ export function initCollection() {
     }
   };
 
+  /**
+   * Keyboard focus must never be left on a control inside a look that is being taken away
+   * (scrolling swaps looks on its own). If the focused control lives in the outgoing look, focus
+   * moves to the same control in the incoming one: the slider stays the slider, buy stays buy.
+   */
+  const FOCUSABLE = ['[data-compare-range]', 'a[data-checkout]'];
+  const focusKeeper = (from: HTMLElement | undefined) => {
+    const active = document.activeElement;
+    if (!from || !(active instanceof HTMLElement) || !from.contains(active)) return () => {};
+    const sel = FOCUSABLE.find((s) => active.matches(s));
+    return (to: HTMLElement) => {
+      const next = (sel && to.querySelector<HTMLElement>(sel)) || to.querySelector<HTMLElement>(FOCUSABLE.join(','));
+      next?.focus({ preventScroll: true });
+    };
+  };
+
   const show = (slug: string) => {
+    const keepFocus = focusKeeper(spreads.get(shown));
     spreads.forEach((el, key) => {
       el.hidden = key !== slug;
     });
     shown = slug;
+    keepFocus(spreads.get(slug)!);
   };
 
   async function select(slug: string, animate = true) {
@@ -95,7 +113,9 @@ export function initCollection() {
     shown = slug;
 
     const frame = to.querySelector<HTMLElement>('.compare');
+    const keepFocus = focusKeeper(from);
     to.hidden = false;
+    keepFocus(to);
     // (opacity only, and no inert/visibility flips: each of those would restyle the whole spread)
     tl = gsap
       .timeline({

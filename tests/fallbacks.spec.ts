@@ -1,5 +1,7 @@
-import { expect, test } from '@playwright/test';
+import { expect, test, chromium, firefox, webkit } from '@playwright/test';
 import { LOOKS, gotoReady, scrollToY, watchConsole } from './helpers';
+
+const playwright = { chromium, firefox, webkit };
 
 test.describe('reduced motion', () => {
   test.use({ reducedMotion: 'reduce' });
@@ -112,35 +114,61 @@ test.describe('JavaScript disabled', () => {
 });
 
 test.describe('WebGL', () => {
-  test('when WebGL is unavailable the static image shows and nothing errors', async ({ page }) => {
-    const problems = watchConsole(page);
-    await page.addInitScript(() => {
-      const original = HTMLCanvasElement.prototype.getContext;
-      // force WebGL off
-      HTMLCanvasElement.prototype.getContext = function (this: HTMLCanvasElement, type: string, ...rest: unknown[]) {
-        if (/webgl/i.test(type)) return null;
-        return (original as (...a: unknown[]) => unknown).call(this, type, ...rest);
-      } as typeof HTMLCanvasElement.prototype.getContext;
-    });
+  test('when WebGL is unavailable the static image shows and nothing errors', async ({ browserName, baseURL, isMobile }) => {
+    // The effect lives in a worker, so WebGL is switched off for the whole browser
+    // (a page script could only reach the main thread).
+    test.skip(browserName === 'webkit', 'WebKit has no switch to turn WebGL off; the same code path is covered in Chromium and Firefox');
+    test.skip(isMobile, 'covered by the desktop engines');
+    const browser = await playwright[browserName].launch(
+      browserName === 'firefox'
+        ? { firefoxUserPrefs: { 'webgl.disabled': true } }
+        : // no GPU and no software fallback: WebGL cannot be created anywhere, workers included
+          { args: ['--disable-gpu', '--disable-software-rasterizer', '--disable-3d-apis'] },
+    );
+    const page = await browser.newPage({ baseURL, viewport: { width: 1440, height: 900 } });
+    // Firefox itself prints a warning whenever a WebGL context cannot be created. That is the browser
+    // describing this test's set-up (WebGL switched off), not the site misbehaving.
+    const problems = watchConsole(page, [/Failed to create WebGL context/]);
     await gotoReady(page);
-    await page.waitForTimeout(4500);
+    expect(await page.evaluate(() => !!document.createElement('canvas').getContext('webgl'))).toBe(false);
+    await page.mouse.move(400, 400); // first movement: this is when the effect would start
+    await scrollToY(page, 300);
+    await page.waitForTimeout(4000);
 
+    // the canvas may be created, but it is never shown and is removed again
+    await expect(page.locator('canvas.is-live')).toHaveCount(0);
     await expect(page.locator('canvas')).toHaveCount(0);
     const img = page.locator('[data-plate-img]');
-    await expect(img).toBeVisible();
+    await expect(img).toBeAttached();
     expect(await img.evaluate((el: HTMLImageElement) => el.complete && el.naturalWidth > 0)).toBe(true);
+    expect(problems, problems.join('\n')).toEqual([]);
+    await browser.close();
+  });
 
-    // the page still scrolls and reads normally
-    await scrollToY(page, 600);
-    await expect(page.locator('h1')).toBeAttached();
+  test('without OffscreenCanvas (older Safari) the effect is skipped and the image stays', async ({ page }) => {
+    const problems = watchConsole(page);
+    await page.addInitScript(() => {
+      // @ts-expect-error simulate a browser without OffscreenCanvas support
+      delete HTMLCanvasElement.prototype.transferControlToOffscreen;
+    });
+    await gotoReady(page);
+    await scrollToY(page, 300);
+    await page.waitForTimeout(3500);
+    await expect(page.locator('canvas')).toHaveCount(0);
+    await expect(page.locator('[data-plate-img]')).toBeAttached();
     expect(problems, problems.join('\n')).toEqual([]);
   });
 
   test('on a capable desktop the canvas mounts over the image, lazily', async ({ page, browserName, isMobile }) => {
     test.skip(browserName !== 'chromium' || isMobile, 'software WebGL is only configured for desktop Chromium');
     await gotoReady(page);
+    // nothing GPU-related happens before the visitor moves
+    await expect(page.locator('canvas')).toHaveCount(0);
+    await page.mouse.move(500, 400);
     const canvas = page.locator('canvas.plate__canvas.is-live');
     await expect(canvas).toHaveCount(1, { timeout: 15_000 });
+    // all of it runs in a worker, not on the page's thread
+    expect(page.workers().length).toBe(1);
 
     // OGL and the line-art texture are not part of the page load: both are requested only after the load event
     const timing = await page.evaluate(() => {

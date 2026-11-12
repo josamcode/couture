@@ -492,7 +492,9 @@ import Motes from './Motes.astro';
       margin-top: 1.5rem;
       /* the frame gives way on short screens, so the name above it and the price and buy button
          below it are all on screen while the look is held */
-      width: min(100%, calc((100svh - var(--stick) - var(--fs-name) * 1.1 - 17rem) * 1.6));
+      /* never smaller than a usable preview: if that does not fit either (enlarged text, tiny
+         window), the fit guard in scroll.ts turns the scene off and the frame is full width again */
+      width: min(100%, max(15rem, calc((100svh - var(--stick) - var(--fs-name) * 1.1 - 17rem) * 1.6)));
     }
   }
   @media (min-width: 64em) and (min-height: 38.75em) {
@@ -509,7 +511,10 @@ import Motes from './Motes.astro';
     }
     /* the frame takes the height that is left on screen under the look's name */
     :global(html.js.motion:not(.reveal-fallback)) .spread__compare {
-      width: min(100%, calc((100svh - var(--header-h) - 1.5rem - var(--fs-name) * 1.08 - 11.5rem) * 1.6));
+      width: min(
+        100%,
+        max(22rem, calc((100svh - var(--header-h) - 1.5rem - var(--fs-name) * 1.08 - 11.5rem) * 1.6))
+      );
     }
   }
 
@@ -521,6 +526,9 @@ import Motes from './Motes.astro';
   .collection.is-plain .spread {
     position: relative !important;
     top: auto !important;
+  }
+  .collection.is-plain .spread__compare {
+    width: 100% !important;
   }
   @media (max-width: 63.99em) {
     .collection.is-plain .look-index {

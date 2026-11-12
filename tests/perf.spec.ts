@@ -44,6 +44,7 @@ async function traceScroll(browser: Browser, page: Page, name: string, scroll: (
   const first = Math.min(...tasks.map((t) => t.ts));
   const last = Math.max(...tasks.map((t) => t.ts));
   const inWindow = tasks.filter((t) => t.ts > first + 250_000 && t.ts < last - 250_000);
+  expect(inWindow.length, 'the recording contains main-thread work').toBeGreaterThan(200);
   const long = inWindow.filter((t) => t.dur! > LONG_TASK_US);
   const durations = inWindow.map((t) => t.dur! / 1000).sort((a, b) => a - b);
   const pct = (p: number) => durations[Math.min(durations.length - 1, Math.floor(durations.length * p))] ?? 0;

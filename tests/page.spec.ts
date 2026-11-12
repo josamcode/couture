@@ -241,8 +241,12 @@ test.describe('look index', () => {
         { capture: true, once: true },
       );
     });
-    await buy.click();
+    // a real click at the button itself (locator.click() would first re-scroll the page, and in WebKit
+    // that jumps a sticky element far enough to change which look is on show)
+    const box = (await buy.boundingBox())!;
+    await page.mouse.click(box.x + box.width / 2, box.y + box.height / 2);
     await page.waitForTimeout(700);
+    expect(await page.evaluate(() => typeof (window as unknown as { __clickY?: number }).__clickY)).toBe('number');
     const moved = await page.evaluate(
       () => Math.abs(window.scrollY - (window as unknown as { __clickY: number }).__clickY),
     );

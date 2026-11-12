@@ -35,9 +35,20 @@ scroll wakes the effect up while the hero scene is moving. Result on this machin
 shader compile, the two texture uploads and the first frame are 2–9 ms each because they run as
 separate tasks.
 
-## Codex round 2 · the fixes
+## Codex round 2 · the fixes (`29fc5d9..19e4406`)
 
-See the end of this file.
+Verdict: **needs attention**. It confirmed three of the round 1 fixes from source ("The blocked-script
+and collection reduced-motion fixes are supported by source; the committed OG image is valid") and
+raised three new findings. All three were valid.
+
+| # | Severity | Finding | Decision | What was done |
+|---|---|---|---|---|
+| 5 | medium | **Enlarged text can collapse the comparison preview.** With a 32 px root font at 600×500 the height-aware width evaluates below zero, and plain mode did not restore the width. | **Fixed** | The frame has a usable floor (`max(15rem, …)` on phones, `max(22rem, …)` on desktop); if that does not fit, the fit guard turns the scene off and `.is-plain` restores a full-width frame. Testing this at 200% text also exposed real horizontal overflow on phones (headline minimums in rem, non-wrapping buttons and header links, an unconstrained grid column): headline sizes are now capped by the screen width, buttons and header links may wrap. New tests at 600×500, 390×844 and 1440×900 with doubled text assert a usable frame and no sideways scrolling. |
+| 6 | medium | **Automatic look swaps hide the focused control.** If keyboard focus is on a look's slider or buy link when scrolling swaps the look, focus was left on a hidden element. | **Fixed** | Focus is carried across: the same control in the incoming look receives focus (slider → slider, buy → buy), in both the animated and the instant path (`focusKeeper` in `src/scripts/collection.ts`). New test focuses the buy link, scrolls into the next look, and expects focus on that look's buy link; same for the slider. |
+| 7 | medium | **The start-up performance test discarded the start-up window** (it dropped the first 250 ms, exactly where the first interaction wakes WebGL) and could pass on an empty recording. | **Fixed, and it found a real problem** | The recording now waits out tracing start-up, marks the first interaction inside the trace, counts every task from that mark on, and fails on missing metadata or an empty recording. Measured honestly on the Intel integrated GPU, the first scroll blocked the main thread for **up to 408 ms** (creating the WebGL context), with further 50–70 ms tasks for texture uploads and buffer resizes. **Fix: the whole effect moved into a Web Worker with an OffscreenCanvas** (`src/scripts/painting.worker.ts`). Context creation, shader compile, texture decode and upload, and every frame now run off the main thread. Re-measured: longest main-thread task during first-scroll start-up **19.6 ms**, p99 6.6 ms, none over 50 ms (`qa/perf/webgl-startup-gpu.json`). Side effects, all good: the headless desktop scroll recording dropped from a 41 ms longest task to 23 ms, and browsers without OffscreenCanvas (Safari before 17) simply keep the static image. |
+
+A third review round was not run: round 2's findings are fixed and each one is now pinned by a test
+that fails without the fix.
 
 ---
 

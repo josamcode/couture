@@ -99,6 +99,16 @@ function riseGroups(): Cleanup {
     if (!groups.has(name)) groups.set(name, []);
     groups.get(name)!.push(el);
   }
+  // Elements are switched on a few per frame, in order. A big group (the 35 characters of the last
+  // headline) would otherwise restyle all at once, which is a long task on a slow phone.
+  const PER_FRAME = 10;
+  const queue: HTMLElement[] = [];
+  let raf = 0;
+  const flush = () => {
+    raf = 0;
+    for (const el of queue.splice(0, PER_FRAME)) el.classList.add('is-in');
+    if (queue.length) raf = requestAnimationFrame(flush);
+  };
   const io = new IntersectionObserver(
     (entries) => {
       for (const entry of entries) {
@@ -107,17 +117,21 @@ function riseGroups(): Cleanup {
         const members = groups.get(name);
         if (!members) continue;
         groups.delete(name);
-        for (const el of members) {
-          el.classList.add('is-in');
-          io.unobserve(el);
-        }
+        for (const el of members) io.unobserve(el);
+        queue.push(...members);
       }
+      if (queue.length && !raf) raf = requestAnimationFrame(flush);
     },
     // a little inside the bottom edge, so the movement is seen rather than half missed
     { rootMargin: '0px 0px -9% 0px', threshold: 0.01 },
   );
   groups.forEach((members) => members.forEach((el) => io.observe(el)));
-  return () => io.disconnect();
+  return () => {
+    io.disconnect();
+    cancelAnimationFrame(raf);
+    // never leave anything waiting: whatever was queued is simply shown
+    for (const el of queue.splice(0)) el.classList.add('is-in');
+  };
 }
 
 /** Header: hides on scroll down, returns on scroll up, turns ink-on-ivory over the ivory section. */

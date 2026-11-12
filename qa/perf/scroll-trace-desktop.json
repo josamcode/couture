@@ -1,115 +1,12 @@
 {
   "scenario": "desktop",
-  "recordedAt": "2026-11-12T16:17:45.001Z",
-  "scrollDurationMs": 23901,
-  "mainThreadTasks": 5564,
-  "longTasksOver50ms": 11,
-  "longestTaskMs": 2115.5,
-  "p99TaskMs": 26.4,
-  "p95TaskMs": 8,
-  "tasksOver16ms": 152,
-  "longTasks": [
-    {
-      "atMs": 1205,
-      "durMs": 88.2,
-      "work": [
-        "ThreadControllerImpl::RunTask 88ms",
-        "Commit 64ms",
-        "EventDispatch 16ms",
-        "FunctionCall 9ms",
-        "UpdateLayoutTree 9ms",
-        "HitTest 3ms"
-      ]
-    },
-    {
-      "atMs": 1303,
-      "durMs": 66.6,
-      "work": [
-        "ThreadControllerImpl::RunTask 67ms",
-        "Commit 61ms"
-      ]
-    },
-    {
-      "atMs": 1384,
-      "durMs": 62.5,
-      "work": [
-        "ThreadControllerImpl::RunTask 62ms",
-        "Commit 56ms"
-      ]
-    },
-    {
-      "atMs": 2061,
-      "durMs": 125.5,
-      "work": [
-        "ThreadControllerImpl::RunTask 125ms",
-        "Commit 119ms",
-        "FireAnimationFrame 3ms",
-        "FunctionCall 3ms"
-      ]
-    },
-    {
-      "atMs": 4763,
-      "durMs": 52.1,
-      "work": [
-        "ThreadControllerImpl::RunTask 52ms",
-        "FireAnimationFrame 45ms",
-        "FunctionCall 45ms",
-        "Layout 19ms",
-        "UpdateLayoutTree 5ms"
-      ]
-    },
-    {
-      "atMs": 5644,
-      "durMs": 77,
-      "work": [
-        "ThreadControllerImpl::RunTask 77ms",
-        "Commit 67ms"
-      ]
-    },
-    {
-      "atMs": 7111,
-      "durMs": 52.4,
-      "work": [
-        "ThreadControllerImpl::RunTask 52ms",
-        "Commit 46ms"
-      ]
-    },
-    {
-      "atMs": 8026,
-      "durMs": 2010.2,
-      "work": [
-        "ThreadControllerImpl::RunTask 2010ms",
-        "Commit 1998ms",
-        "EventDispatch 6ms",
-        "FunctionCall 6ms",
-        "UpdateLayoutTree 6ms"
-      ]
-    },
-    {
-      "atMs": 10045,
-      "durMs": 91.2,
-      "work": [
-        "ThreadControllerImpl::RunTask 91ms",
-        "Commit 76ms",
-        "FireAnimationFrame 8ms",
-        "FunctionCall 8ms"
-      ]
-    },
-    {
-      "atMs": 10410,
-      "durMs": 2115.5,
-      "work": [
-        "ThreadControllerImpl::RunTask 2115ms",
-        "Commit 2108ms"
-      ]
-    },
-    {
-      "atMs": 16791,
-      "durMs": 1039.8,
-      "work": [
-        "ThreadControllerImpl::RunTask 1040ms",
-        "Commit 1035ms"
-      ]
-    }
-  ]
+  "recordedAt": "2026-11-12T16:58:42.303Z",
+  "scrollDurationMs": 10442,
+  "mainThreadTasks": 6091,
+  "longTasksOver50ms": 0,
+  "longestTaskMs": 23.2,
+  "p99TaskMs": 7.8,
+  "p95TaskMs": 4.2,
+  "tasksOver16ms": 10,
+  "longTasks": []
 }

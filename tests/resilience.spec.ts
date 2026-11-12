@@ -173,3 +173,73 @@ test.describe('the fitting room on awkward screens', () => {
     });
   }
 });
+
+test.describe('enlarged text', () => {
+  for (const size of [
+    { width: 600, height: 500 },
+    { width: 1440, height: 900 },
+    { width: 390, height: 844 },
+  ]) {
+    test(`${size.width}×${size.height} with the text size doubled: the comparison preview stays usable`, async ({
+      page,
+      isMobile,
+    }) => {
+      test.skip(isMobile, 'viewport sizes are set by the test');
+      await page.setViewportSize(size);
+      // the visitor's browser font size is 32px instead of 16px
+      await page.addInitScript(() => {
+        const style = document.createElement('style');
+        style.textContent = 'html{font-size:200% !important}';
+        document.addEventListener('DOMContentLoaded', () => document.head.appendChild(style));
+      });
+      await gotoReady(page);
+      await page.locator('#look-editorial [data-compare]').scrollIntoViewIfNeeded();
+      await page.waitForTimeout(1200);
+      const frame = await page.evaluate(() => {
+        const el = document.querySelector<HTMLElement>('#look-editorial [data-compare]')!;
+        const col = el.closest<HTMLElement>('[data-spread]')!;
+        return { width: el.offsetWidth, height: el.offsetHeight, column: col.clientWidth };
+      });
+      // a real picture, not a sliver: at least 220px wide, or the full column if the column is narrower
+      expect(frame.width).toBeGreaterThanOrEqual(Math.min(220, frame.column - 2));
+      expect(frame.height).toBeGreaterThan(120);
+      const overflow = await page.evaluate(
+        () => document.documentElement.scrollWidth - document.documentElement.clientWidth,
+      );
+      expect(overflow).toBeLessThanOrEqual(0);
+    });
+  }
+});
+
+test.describe('keyboard focus in the fitting room', () => {
+  test('when scrolling swaps the look, focus moves to the same control in the new look', async ({ page, isMobile }) => {
+    test.skip(isMobile, 'keyboard journey on desktop');
+    await gotoReady(page);
+    const intoStretch = (fraction: number) =>
+      page.evaluate((f) => {
+        const s = document.querySelector<HTMLElement>('[data-spreads]')!;
+        const a = document.querySelector<HTMLElement>('[data-spread]:not([hidden])')!;
+        const stick = parseFloat(getComputedStyle(a).top) || 0;
+        const run = s.offsetHeight - a.offsetHeight;
+        window.scrollTo({ top: s.getBoundingClientRect().top + scrollY - stick + run * f, behavior: 'instant' });
+      }, fraction);
+
+    await intoStretch(0.05); // look I
+    await page.waitForTimeout(900);
+    await page.locator('#look-editorial a[data-checkout]').focus();
+    await expect(page.locator('#look-editorial a[data-checkout]')).toBeFocused();
+
+    await intoStretch(0.25); // look II
+    await expect(page.locator('#look-swiss-grid')).toBeVisible();
+    await expect(page.locator('#look-swiss-grid a[data-checkout]')).toBeFocused();
+
+    // the slider keeps focus the same way
+    await page.locator('#look-swiss-grid [data-compare-range]').focus();
+    await intoStretch(0.42); // look III
+    await expect(page.locator('#look-noir')).toBeVisible();
+    await expect(page.locator('#look-noir [data-compare-range]')).toBeFocused();
+    // and focus is never left on something that is no longer on the page
+    await expect(page.locator('[data-spread]:not([hidden])')).toHaveCount(1);
+    expect(await page.evaluate(() => document.activeElement?.closest('[hidden]'))).toBeNull();
+  });
+});

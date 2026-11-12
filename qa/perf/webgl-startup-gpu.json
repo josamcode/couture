@@ -1,36 +1,11 @@
 {
   "scenario": "first-scroll-webgl-startup (real GPU, headed)",
-  "recordedAt": "2026-11-12T16:22:03.287Z",
+  "recordedAt": "2026-11-12T16:36:23.430Z",
   "gpu": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
   "parallelShaderCompile": true,
-  "mainThreadTasks": 4362,
-  "longestTaskMs": 43.3,
-  "p99TaskMs": 5.9,
+  "mainThreadTasks": 3483,
+  "longestTaskMs": 19.6,
+  "p99TaskMs": 6.6,
   "longTasksOver50ms": [],
-  "startupSteps": [
-    {
-      "step": "painting-arm",
-      "ms": 0.3
-    },
-    {
-      "step": "painting:context",
-      "ms": 42.2
-    },
-    {
-      "step": "painting:shader",
-      "ms": 6.1
-    },
-    {
-      "step": "painting:upload-paint",
-      "ms": 9
-    },
-    {
-      "step": "painting:upload-line",
-      "ms": 8.2
-    },
-    {
-      "step": "painting:first-frame",
-      "ms": 1.6
-    }
-  ]
+  "gpuWorkOnMainThread": false
 }

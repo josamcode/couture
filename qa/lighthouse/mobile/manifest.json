@@ -2,10 +2,10 @@
   {
     "url": "http://localhost:4322/",
     "isRepresentativeRun": false,
-    "htmlPath": "D:\\MyProjects\\couture\\qa\\lighthouse\\mobile\\2026_11_12_15_48_01-mobile.html",
-    "jsonPath": "D:\\MyProjects\\couture\\qa\\lighthouse\\mobile\\2026_11_12_15_48_01-mobile.json",
+    "htmlPath": "D:\\MyProjects\\couture\\qa\\lighthouse\\mobile\\2026_11_12_16_50_06-mobile.html",
+    "jsonPath": "D:\\MyProjects\\couture\\qa\\lighthouse\\mobile\\2026_11_12_16_50_06-mobile.json",
     "summary": {
-      "performance": 0.95,
+      "performance": 0.98,
       "accessibility": 1,
       "best-practices": 1,
       "seo": 1,
@@ -15,10 +15,10 @@
   {
     "url": "http://localhost:4322/",
     "isRepresentativeRun": false,
-    "htmlPath": "D:\\MyProjects\\couture\\qa\\lighthouse\\mobile\\2026_11_12_15_48_15-mobile.html",
-    "jsonPath": "D:\\MyProjects\\couture\\qa\\lighthouse\\mobile\\2026_11_12_15_48_15-mobile.json",
+    "htmlPath": "D:\\MyProjects\\couture\\qa\\lighthouse\\mobile\\2026_11_12_16_50_22-mobile.html",
+    "jsonPath": "D:\\MyProjects\\couture\\qa\\lighthouse\\mobile\\2026_11_12_16_50_22-mobile.json",
     "summary": {
-      "performance": 1,
+      "performance": 0.99,
       "accessibility": 1,
       "best-practices": 1,
       "seo": 1,
@@ -28,10 +28,10 @@
   {
     "url": "http://localhost:4322/",
     "isRepresentativeRun": true,
-    "htmlPath": "D:\\MyProjects\\couture\\qa\\lighthouse\\mobile\\2026_11_12_15_47_46-mobile.html",
-    "jsonPath": "D:\\MyProjects\\couture\\qa\\lighthouse\\mobile\\2026_11_12_15_47_46-mobile.json",
+    "htmlPath": "D:\\MyProjects\\couture\\qa\\lighthouse\\mobile\\2026_11_12_16_50_36-mobile.html",
+    "jsonPath": "D:\\MyProjects\\couture\\qa\\lighthouse\\mobile\\2026_11_12_16_50_36-mobile.json",
     "summary": {
-      "performance": 0.99,
+      "performance": 0.98,
       "accessibility": 1,
       "best-practices": 1,
       "seo": 1,

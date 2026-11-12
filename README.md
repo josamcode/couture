@@ -195,10 +195,18 @@ phones ≤ 250 KB, fonts, HTML).
 npm test
 ```
 
-113 Playwright checks on Chromium, Firefox, WebKit, a Pixel and an iPhone profile: zero console
+Playwright checks on Chromium, Firefox, WebKit, a Pixel and an iPhone profile: zero console
 errors or warnings, header links, every look by click and keyboard, the slider by mouse / touch /
-keyboard, reduced motion, JavaScript off, WebGL off. Plus two scroll recordings that fail on any
-main-thread task over 50 ms (`qa/perf/`).
+keyboard, reduced motion (also switched on mid-visit), JavaScript off, scripts blocked, WebGL off,
+short screens, doubled text size, keyboard focus through the look scene. Plus two scroll recordings
+that fail on any main-thread task over 50 ms (`qa/perf/`).
+
+```bash
+npm run test:gpu
+```
+
+Optional, on a machine with a real GPU (a browser window opens for a few seconds): records the
+main thread while the first scroll wakes the WebGL effect up.
 
 ```bash
 npm run lhci
@@ -236,7 +244,8 @@ src/
   scripts/
     main.ts                 entry: headline reveal, look index, slider (runs after first paint)
     scroll.ts               every scroll scene (lazy)
-    painting.ts             the one WebGL effect, OGL (lazy)
+    painting.ts             the page side of the one WebGL effect (lazy)
+    painting.worker.ts      the effect itself: OGL and the shader, in a Web Worker
     collection.ts, compare.ts, state.ts
   styles/global.css         brand tokens (locked) and base styles
 scripts/                    build helpers: images, lineart, torn, mark, og, demo-shots,
@@ -263,10 +272,12 @@ qa/                         research.md, reviews.md, screenshots/, lighthouse/, 
   arrive. With JavaScript off the page reads top to bottom with all six looks listed.
 - **Reduced motion** (`prefers-reduced-motion`): no smooth scroll, no reveals, no WebGL, no pinned
   scenes. A normal, finished page.
-- **WebGL is optional everywhere.** The plain `<img>` is the fallback and the LCP element. The
-  effect is skipped for reduced motion, Save-Data, low-end devices, or no WebGL; it starts on the
-  visitor's first movement (or after a few idle seconds), adapts its resolution to the frame rate,
-  and stops rendering when off screen.
+- **WebGL is optional everywhere, and never on the main thread.** The plain `<img>` is the
+  fallback and the LCP element. The effect runs in a Web Worker on an OffscreenCanvas, so creating
+  the context, compiling the shader and drawing cannot make scrolling stutter. It is skipped for
+  reduced motion, Save-Data, low-end devices, no WebGL, or no OffscreenCanvas (Safari before 17);
+  it starts on the visitor's first movement (or after a few idle seconds), adapts its resolution
+  to the frame rate, and stops drawing when off screen.
 
 ## Third-party material
 

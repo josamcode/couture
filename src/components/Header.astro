@@ -122,8 +122,9 @@ import { SITE } from '../data/site';
       width: 100%;
     }
     .site-header__nav ul {
+      flex-wrap: wrap; /* with enlarged text the three links take two rows instead of leaving the screen */
       justify-content: space-between;
-      gap: 0.5rem;
+      gap: 0 0.5rem;
     }
     .site-header__nav a {
       letter-spacing: 0.16em;

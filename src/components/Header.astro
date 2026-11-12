@@ -1,0 +1,131 @@
+---
+import Wordmark from './Wordmark.astro';
+import { SITE } from '../data/site';
+---
+
+<header class="site-header" data-header data-tone="ink">
+  <div class="site-header__bar">
+    <a class="site-header__brand" href="#top" aria-label="Couture UI, back to top">
+      <Wordmark />
+    </a>
+    <nav class="site-header__nav" aria-label="Primary">
+      <ul>
+        <li><a href="#collection">The collection</a></li>
+        <li><a href="#wardrobe">The wardrobe</a></li>
+        <li><a href={SITE.instagram.url} rel="noopener">Instagram</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<style>
+  /* Without JS the header simply sits at the top of the page (it cannot switch tone, so it must not float). */
+  .site-header {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 50;
+    color: var(--fg);
+  }
+  :global(html.js) .site-header {
+    position: fixed;
+    transition: transform var(--dur-fast) var(--ease-out);
+    will-change: transform;
+  }
+  /* Scroll down: the header leaves. Scroll up: it returns. */
+  :global(html.js) .site-header.is-hidden {
+    transform: translateY(-100%);
+  }
+  /* Keyboard users never lose it. */
+  :global(html.js) .site-header.is-hidden:focus-within {
+    transform: none;
+  }
+
+  /* Once the page has moved, the bar gets its paper so it stays readable over content. */
+  .site-header::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--bg);
+    border-bottom: 1px solid var(--line);
+    opacity: 0;
+    transition: opacity var(--dur-fast) var(--ease-out);
+  }
+  .site-header.is-scrolled::before {
+    opacity: 1;
+  }
+
+  .site-header__bar {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem;
+    width: min(100% - 2 * var(--gutter), var(--max));
+    min-height: var(--header-h);
+    margin-inline: auto;
+  }
+
+  .site-header__brand {
+    display: inline-flex;
+    align-items: center;
+    min-height: 2.75rem; /* 44px touch target */
+    text-decoration: none;
+  }
+
+  .site-header__nav ul {
+    display: flex;
+    align-items: center;
+    gap: clamp(1.25rem, 2.6vw, 2.75rem);
+  }
+  .site-header__nav a {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    min-height: 2.75rem; /* 44px touch target */
+    min-width: 2.75rem;
+    font-size: 0.75rem; /* 12px */
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    text-decoration: none;
+    white-space: nowrap;
+  }
+  /* Hover: a hairline draws in under the link (transform only). */
+  .site-header__nav a::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0.2em;
+    bottom: 0.7rem;
+    height: 1px;
+    background: currentColor;
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform var(--dur-fast) var(--ease-out);
+  }
+  @media (hover: hover) {
+    .site-header__nav a:hover::after {
+      transform: scaleX(1);
+    }
+  }
+
+  /* Phones: the three links do not fit beside the wordmark at 12px, so the masthead takes two rows. */
+  @media (max-width: 40em) {
+    .site-header__bar {
+      flex-wrap: wrap;
+      row-gap: 0;
+      padding-top: 0.5rem;
+    }
+    .site-header__nav {
+      width: 100%;
+    }
+    .site-header__nav ul {
+      justify-content: space-between;
+      gap: 0.5rem;
+    }
+    .site-header__nav a {
+      letter-spacing: 0.16em;
+    }
+  }
+</style>

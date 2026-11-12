@@ -1,0 +1,40 @@
+---
+// The wordmark, built in HTML/CSS (never an image):
+// "Couture" in Bodoni Moda + a small red dot + "UI" in Jost Medium with wide tracking.
+---
+
+<span class="wordmark">
+  <span class="wordmark__couture">Couture</span><span class="wordmark__dot" aria-hidden="true"></span><span
+    class="wordmark__ui">UI</span
+  >
+</span>
+
+<style>
+  .wordmark {
+    display: inline-flex;
+    align-items: baseline;
+    white-space: nowrap;
+    line-height: 1;
+  }
+  .wordmark__couture {
+    font-family: var(--font-display);
+    font-size: 1.625rem; /* 26px: Bodoni Moda never goes below 24px */
+    font-weight: 400;
+    letter-spacing: -0.01em;
+  }
+  .wordmark__dot {
+    width: 0.3125rem;
+    height: 0.3125rem;
+    margin-inline: 0.22em 0.5em;
+    border-radius: 50%;
+    background: var(--red);
+  }
+  .wordmark__ui {
+    font-family: var(--font-text);
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.3em;
+    /* tracking adds space after the last letter; pull it back so the mark ends on the I */
+    margin-inline-end: -0.3em;
+  }
+</style>

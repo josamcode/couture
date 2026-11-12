@@ -1,0 +1,60 @@
+---
+// A torn-paper edge that sits on top of a section and overlaps the one before it.
+// Place it as the first child of a `position: relative` section; it takes the section's --bg.
+// Path data is static (generated once by scripts/torn.mjs) and shared through <TornDefs />.
+import { TORN_VIEWBOX } from '../data/torn';
+
+interface Props {
+  /** Mirror the edge so two tears on one page do not look identical. */
+  flip?: boolean;
+}
+const { flip = false } = Astro.props;
+const vb = `0 0 ${TORN_VIEWBOX.width} ${TORN_VIEWBOX.height}`;
+---
+
+<div class:list={['torn', { 'torn--flip': flip }]} data-torn aria-hidden="true">
+  <svg class="torn__fringe" data-torn-fringe viewBox={vb} preserveAspectRatio="none" focusable="false">
+    <use href="#torn-fringe"></use>
+  </svg>
+  <svg class="torn__sheet" viewBox={vb} preserveAspectRatio="none" focusable="false">
+    {/* Soft shadow under the tear: three faint offset copies instead of a blur filter (cheap to composite). */}
+    <g class="torn__shadow">
+      <use href="#torn-main" transform="translate(0 -9)" opacity="0.07"></use>
+      <use href="#torn-main" transform="translate(0 -5)" opacity="0.1"></use>
+      <use href="#torn-main" transform="translate(0 -2)" opacity="0.16"></use>
+    </g>
+    <use class="torn__paper" href="#torn-main"></use>
+  </svg>
+</div>
+
+<style>
+  .torn {
+    position: absolute;
+    left: 0;
+    right: 0;
+    /* 1px overlap so no seam can show between the edge and its sheet. */
+    bottom: calc(100% - 1px);
+    height: var(--torn-h);
+    pointer-events: none;
+  }
+  .torn--flip {
+    transform: scaleX(-1);
+  }
+  .torn svg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+  }
+  .torn__paper {
+    fill: var(--bg);
+  }
+  .torn__fringe {
+    fill: var(--bg);
+    opacity: 0.42;
+  }
+  .torn__shadow {
+    fill: #000;
+  }
+</style>

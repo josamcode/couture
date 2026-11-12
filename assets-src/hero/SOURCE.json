@@ -1,0 +1,21 @@
+{
+  "placeholder": true,
+  "objectID": 435802,
+  "title": "Portrait of a Young Man",
+  "artist": "Bronzino (Agnolo di Cosimo di Mariano)",
+  "date": "1530s",
+  "sourceUrl": "https://www.metmuseum.org/art/collection/search/435802",
+  "imageUrl": "https://images.metmuseum.org/CRDImages/ep/original/DP-14286-011.jpg",
+  "isPublicDomain": true,
+  "license": "Public domain (CC0 1.0) — The Met Open Access",
+  "original": {
+    "width": 3120,
+    "height": 3973
+  },
+  "crop": {
+    "left": 70,
+    "top": 338,
+    "width": 2980,
+    "height": 1676
+  }
+}

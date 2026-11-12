@@ -1,0 +1,20 @@
+---
+// The torn edge path data, written into the page once and referenced by every <TornEdge />.
+import { TORN_MAIN, TORN_FRINGE } from '../data/torn';
+---
+
+<svg class="torn-defs" width="0" height="0" aria-hidden="true" focusable="false">
+  <defs>
+    <path id="torn-main" d={TORN_MAIN}></path>
+    <path id="torn-fringe" d={TORN_FRINGE}></path>
+  </defs>
+</svg>
+
+<style>
+  .torn-defs {
+    position: absolute;
+    width: 0;
+    height: 0;
+    overflow: hidden;
+  }
+</style>

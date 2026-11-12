@@ -1,0 +1,179 @@
+---
+// The comparison frame: off-the-rack underneath, couture on top, clipped by a draggable divider.
+// A native <input type="range"> drives it, so it is keyboard- and screen-reader-accessible.
+// Pointer dragging is added by src/scripts/compare.ts. Without JS it rests at the start position.
+import { LOOK_IMAGE_RATIO, LOOK_IMAGE_WIDTHS, type Look } from '../data/looks';
+
+interface Props {
+  look: Look;
+  /** Load the images eagerly (only the look that is visible first). */
+  eager?: boolean;
+}
+const { look, eager = false } = Astro.props;
+const START = 52;
+const id = `compare-${look.slug}`;
+const sizes = '(min-width: 64em) 62vw, 92vw';
+const srcset = (base: string, ext: string) => LOOK_IMAGE_WIDTHS.map((w) => `${base}-${w}.${ext} ${w}w`).join(', ');
+const layers = [
+  { key: 'base', img: look.images.offTheRack, label: 'Off-the-rack', side: 'l' },
+  { key: 'top', img: look.images.couture, label: 'Couture', side: 'r' },
+] as const;
+---
+
+<div class="compare" data-compare data-start={START} style={`--pos:${START}`}>
+  {
+    layers.map(({ key, img, label, side }) => (
+      <div class={`compare__layer compare__layer--${key}`}>
+        <picture>
+          <source type="image/avif" srcset={srcset(img.base, 'avif')} sizes={sizes} />
+          <source type="image/webp" srcset={srcset(img.base, 'webp')} sizes={sizes} />
+          <img
+            src={`${img.base}-800.webp`}
+            width={LOOK_IMAGE_RATIO.width}
+            height={LOOK_IMAGE_RATIO.height}
+            alt={img.alt}
+            loading={eager ? undefined : 'lazy'}
+            decoding="async"
+            draggable="false"
+          />
+        </picture>
+        <span class={`label compare__label compare__label--${side}`}>{label}</span>
+      </div>
+    ))
+  }
+
+  <div class="compare__divider" aria-hidden="true">
+    <span class="compare__handle">
+      <svg viewBox="0 0 20 10" width="20" height="10" focusable="false">
+        <path d="M6 1 2 5l4 4M14 1l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.2"></path>
+      </svg>
+    </span>
+  </div>
+
+  <label class="visually-hidden" for={id}>
+    Compare the {look.name} look: move left to show more of the couture page, right to show more of the off-the-rack
+    page
+  </label>
+  <input
+    class="compare__range"
+    id={id}
+    type="range"
+    min="0"
+    max="100"
+    step="1"
+    value={START}
+    aria-valuetext={`Divider at ${START} percent`}
+    data-compare-range
+  />
+</div>
+
+<style>
+  .compare {
+    --pos: 52;
+    position: relative;
+    aspect-ratio: 16 / 10;
+    overflow: hidden;
+    container-type: inline-size;
+    background: var(--line);
+    border: 1px solid var(--line);
+    cursor: ew-resize;
+    /* vertical swipes scroll the page; horizontal drags are ours */
+    touch-action: pan-y;
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-touch-callout: none;
+  }
+
+  .compare__layer {
+    position: absolute;
+    inset: 0;
+  }
+  .compare__layer picture,
+  .compare__layer img {
+    width: 100%;
+    height: 100%;
+  }
+  .compare__layer img {
+    object-fit: cover;
+    pointer-events: none;
+    -webkit-user-drag: none;
+  }
+  /* Couture is on top and shows to the RIGHT of the divider. */
+  .compare__layer--top {
+    clip-path: inset(0 0 0 calc(var(--pos) * 1%));
+  }
+
+  .compare__label {
+    position: absolute;
+    top: 0.75rem;
+    padding: 0.5rem 0.75rem;
+    background: var(--ink);
+    color: var(--ivory);
+    line-height: 1;
+    white-space: nowrap;
+  }
+  .compare__label--l {
+    left: 0.75rem;
+  }
+  .compare__label--r {
+    right: 0.75rem;
+  }
+  /* small frames: lighter chips so the two labels never crowd the divider */
+  @container (max-width: 30rem) {
+    .compare__label {
+      top: 0.5rem;
+      padding: 0.4rem 0.5rem;
+      letter-spacing: 0.18em;
+    }
+    .compare__label--l {
+      left: 0.5rem;
+    }
+    .compare__label--r {
+      right: 0.5rem;
+    }
+  }
+
+  .compare__divider {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: 1px;
+    margin-left: -0.5px;
+    background: var(--ink);
+    /* moved with transform only (1cqw = 1% of the frame width) */
+    transform: translateX(calc(var(--pos) * 1cqw));
+    will-change: transform;
+    pointer-events: none;
+  }
+  .compare__handle {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    display: grid;
+    place-items: center;
+    width: 2.75rem; /* 44px */
+    height: 2.75rem;
+    margin: -1.375rem 0 0 -1.375rem;
+    border: 1px solid var(--ink);
+    border-radius: 50%;
+    background: var(--ivory);
+    color: var(--ink);
+  }
+
+  /* The real control. Invisible, but focusable and announced; arrow keys move the divider. */
+  .compare__range {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    opacity: 0;
+    pointer-events: none;
+  }
+  .compare:has(.compare__range:focus-visible) .compare__handle {
+    outline: 2px solid var(--ink);
+    outline-offset: 3px;
+    box-shadow: 0 0 0 2px var(--ivory);
+  }
+</style>

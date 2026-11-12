@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1600">
+<title>Northwind — Quiet luxury</title>
+<style>
+  @font-face { font-family: "Jost"; font-weight: 400; font-style: normal; src: url("../../node_modules/@fontsource/jost/files/jost-latin-400-normal.woff2") format("woff2"); }
+  @font-face { font-family: "Jost"; font-weight: 500; font-style: normal; src: url("../../node_modules/@fontsource/jost/files/jost-latin-500-normal.woff2") format("woff2"); }
+  @font-face { font-family: "Cormorant Garamond"; font-weight: 300; font-style: normal; src: url("../../node_modules/@fontsource/cormorant-garamond/files/cormorant-garamond-latin-300-normal.woff2") format("woff2"); }
+  @font-face { font-family: "Cormorant Garamond"; font-weight: 300; font-style: italic; src: url("../../node_modules/@fontsource/cormorant-garamond/files/cormorant-garamond-latin-300-italic.woff2") format("woff2"); }
+  @font-face { font-family: "Cormorant Garamond"; font-weight: 400; font-style: normal; src: url("../../node_modules/@fontsource/cormorant-garamond/files/cormorant-garamond-latin-400-normal.woff2") format("woff2"); }
+  @font-face { font-family: "Cormorant Garamond"; font-weight: 400; font-style: italic; src: url("../../node_modules/@fontsource/cormorant-garamond/files/cormorant-garamond-latin-400-italic.woff2") format("woff2"); }
+
+  :root { --paper: #F7F5F0; --greige: #B8B0A2; --stone: #8E877B; --char: #2B2926; --plate: #ECE8DF; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { width: 1600px; height: 1000px; overflow: hidden; }
+  body {
+    background: var(--paper); color: var(--char);
+    font-family: "Cormorant Garamond", serif; font-weight: 400;
+    -webkit-font-smoothing: antialiased;
+  }
+  .abs { position: absolute; }
+  .caps { font-family: "Jost", sans-serif; font-weight: 400; font-size: 11px; line-height: 16px; letter-spacing: 0.36em; text-transform: uppercase; }
+  .stone { color: var(--stone); }
+
+  /* nav */
+  .nav { left: 120px; right: 120px; top: 56px; height: 20px; display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; }
+  .nav .l, .nav .r { display: flex; gap: 56px; color: var(--stone); }
+  .nav .r { justify-content: flex-end; }
+  .nav .on { color: var(--char); }
+  .nav .logo { font-weight: 500; font-size: 13px; letter-spacing: 0.62em; padding-left: 0.62em; color: var(--char); }
+  .nav .su { color: var(--char); }
+
+  /* plate */
+  .plate { left: 670px; top: 138px; width: 260px; height: 338px; border-radius: 130px 130px 0 0; background: var(--plate); overflow: hidden; }
+  .plate svg { width: 100%; height: 100%; display: block; }
+  .cap { left: 0; width: 1600px; top: 500px; text-align: center; color: var(--stone); font-size: 10px; }
+
+  /* words */
+  h1 {
+    left: 0; width: 1600px; top: 556px; text-align: center;
+    font-weight: 300; font-size: 62px; line-height: 70px; letter-spacing: -0.005em;
+  }
+  h1 em { font-style: italic; }
+  .sub { left: 0; width: 1600px; top: 640px; text-align: center; font-style: italic; font-weight: 400; font-size: 22px; line-height: 30px; color: var(--stone); }
+  .cta { left: 0; width: 1600px; top: 712px; display: flex; justify-content: center; gap: 64px; }
+  .cta span { padding-bottom: 9px; }
+  .cta .go { border-bottom: 1px solid var(--char); }
+  .cta .more { color: var(--stone); }
+
+  /* the one line */
+  .rule { left: 240px; width: 1120px; top: 806px; height: 1px; background: var(--greige); }
+
+  .feats { left: 240px; width: 1120px; top: 836px; display: grid; grid-template-columns: repeat(3, 1fr); column-gap: 40px; }
+  .feats > div { text-align: center; }
+  .feats > div:first-child { text-align: left; }
+  .feats > div:last-child { text-align: right; }
+  .feats .caps span { color: var(--greige); margin-right: 1.4em; }
+  .feats p { margin-top: 10px; font-size: 19px; line-height: 25px; color: var(--stone); }
+
+  .corner { top: 942px; font-size: 10px; color: var(--greige); }
+</style>
+</head>
+<body>
+
+  <div class="abs nav caps">
+    <div class="l"><span class="on">Home</span><span>Shop</span></div>
+    <div class="logo">Northwind</div>
+    <div class="r"><span>About</span><span>Contact</span><span class="su">Sign up</span></div>
+  </div>
+
+  <div class="abs plate">
+    <svg viewBox="0 0 260 338" aria-hidden="true">
+      <defs>
+        <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#EFEBE3"/><stop offset="1" stop-color="#E6E1D6"/></linearGradient>
+        <linearGradient id="bag" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#CFC8BA"/><stop offset=".62" stop-color="#C6BEAF"/><stop offset="1" stop-color="#B4AC9C"/></linearGradient>
+        <filter id="sh"><feGaussianBlur stdDeviation="6"/></filter>
+      </defs>
+      <rect width="260" height="338" fill="url(#bg)"/>
+      <rect x="0" y="286" width="260" height="52" fill="#DFD9CD"/>
+      <ellipse cx="134" cy="288" rx="62" ry="7" fill="#8E877B" opacity=".35" filter="url(#sh)"/>
+      <!-- bag -->
+      <path d="M90 118 L170 118 L178 286 L82 286 Z" fill="url(#bag)"/>
+      <rect x="88" y="100" width="84" height="19" fill="#C9C1B3"/>
+      <rect x="88" y="117" width="84" height="1" fill="#2B2926" opacity=".35"/>
+      <!-- label -->
+      <rect x="104" y="168" width="52" height="66" fill="#F7F5F0"/>
+      <text x="130" y="194" text-anchor="middle" font-family="Jost" font-weight="500" font-size="4.6" letter-spacing="1.9" fill="#2B2926">NORTHWIND</text>
+      <rect x="124" y="202" width="12" height=".6" fill="#2B2926"/>
+      <text x="130" y="219" text-anchor="middle" font-family="Cormorant Garamond" font-style="italic" font-size="13" fill="#2B2926">No. 14</text>
+    </svg>
+  </div>
+  <div class="abs cap caps">Lot No. 14 &nbsp;·&nbsp; Huila, Colombia &nbsp;·&nbsp; Washed &nbsp;·&nbsp; 1,850 m</div>
+
+  <h1 class="abs">Welcome to <em>Northwind</em></h1>
+  <p class="abs sub">Small-batch coffee, roasted with passion and delivered fresh to your door.</p>
+  <div class="abs cta caps"><span class="go">Get started</span><span class="more">Learn more</span></div>
+
+  <div class="abs rule"></div>
+
+  <div class="abs feats">
+    <div>
+      <div class="caps"><span>i.</span>Fresh roasted</div>
+      <p>Roasted to order, at its peak on arrival.</p>
+    </div>
+    <div>
+      <div class="caps"><span>ii.</span>Fast delivery</div>
+      <p>With our compliments, in two to three days.</p>
+    </div>
+    <div>
+      <div class="caps"><span>iii.</span>Sustainably sourced</div>
+      <p>Bought directly from the farmers who grow it.</p>
+    </div>
+  </div>
+
+  <div class="abs corner caps" style="left: 120px">Blackcurrant &nbsp;·&nbsp; Cocoa nib &nbsp;·&nbsp; Brown sugar</div>
+  <div class="abs corner caps" style="right: 120px">250 g &nbsp;·&nbsp; Roasted 04 November 2026</div>
+
+</body>
+</html>

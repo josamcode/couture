@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1600">
+<title>Northwind — Brutal mono</title>
+<style>
+  @font-face { font-family: "Space Mono"; font-weight: 400; font-style: normal; src: url("../../node_modules/@fontsource/space-mono/files/space-mono-latin-400-normal.woff2") format("woff2"); }
+  @font-face { font-family: "Space Mono"; font-weight: 700; font-style: normal; src: url("../../node_modules/@fontsource/space-mono/files/space-mono-latin-700-normal.woff2") format("woff2"); }
+
+  :root { --bg: #EDEDE8; --k: #000; --y: #FFE500; --w: #FFFFFF; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { width: 1600px; height: 1000px; overflow: hidden; }
+  body {
+    background: var(--bg); color: var(--k);
+    font-family: "Space Mono", monospace; font-size: 15px; line-height: 22px;
+    text-transform: uppercase;
+  }
+  .abs { position: absolute; }
+  .box { border: 3px solid var(--k); background: var(--w); }
+  .shadow { box-shadow: 8px 8px 0 var(--k); }
+  b { font-weight: 700; }
+
+  /* header */
+  .head { left: 32px; top: 28px; width: 1528px; height: 64px; display: flex; align-items: stretch; }
+  .head > div { display: flex; align-items: center; padding: 0 24px; border-right: 3px solid var(--k); font-weight: 700; font-size: 16px; }
+  .head .logo { background: var(--k); color: var(--y); font-size: 22px; letter-spacing: .02em; padding: 0 28px; }
+  .head .tag { flex: 1; font-weight: 400; font-size: 14px; }
+  .head .on { background: var(--k); color: var(--w); }
+  .head .signup { background: var(--y); border-right: 0; padding: 0 30px; }
+
+  /* hero */
+  .hero { left: 32px; top: 120px; width: 992px; height: 568px; }
+  .bar {
+    height: 40px; border-bottom: 3px solid var(--k); display: flex; align-items: center; justify-content: space-between;
+    padding: 0 18px; font-size: 13px; font-weight: 700;
+  }
+  .bar.k { background: var(--k); color: var(--w); }
+  .hero .in { padding: 30px 36px 0; }
+  .cmt { font-size: 15px; }
+  h1 { margin-top: 12px; font-weight: 700; font-size: 136px; line-height: 124px; letter-spacing: -0.03em; white-space: nowrap; }
+  h1 span { display: block; height: 124px; }
+  h1 span + span { margin-top: 8px; display: flex; align-items: flex-end; }
+  h1 mark { display: block; height: 124px; line-height: 116px; background: var(--y); color: var(--k); padding: 0 16px 0 10px; margin-left: -10px; border: 3px solid var(--k); }
+  h1 u { text-decoration: none; display: block; width: 64px; height: 16px; background: var(--k); margin: 0 0 14px 14px; }
+  .sub { margin-top: 24px; font-size: 19px; line-height: 29px; width: 820px; }
+  .cta { position: absolute; left: 36px; bottom: 36px; display: flex; gap: 28px; }
+  .btn {
+    height: 62px; padding: 0 30px; display: flex; align-items: center; gap: 16px;
+    border: 3px solid var(--k); font-weight: 700; font-size: 18px;
+    box-shadow: 6px 6px 0 var(--k);
+  }
+  .btn.y { background: var(--y); }
+  .btn.w { background: var(--w); }
+  .stamp { position: absolute; right: 36px; bottom: 36px; text-align: right; font-size: 13px; line-height: 20px; }
+
+  /* spec sheet */
+  .spec { left: 1060px; top: 120px; width: 500px; height: 568px; }
+  .spec pre {
+    font-family: inherit; font-size: 15px; line-height: 17px; font-weight: 700;
+    padding: 0 22px 14px; border-bottom: 3px solid var(--k); background: var(--y);
+    display: flex; justify-content: space-between; align-items: flex-end; height: 148px;
+  }
+  .spec pre span { display: block; }
+  .spec pre .r { text-align: right; font-size: 13px; line-height: 19px; font-weight: 400; }
+  .rows { padding: 12px 22px 0; }
+  .row { display: flex; align-items: baseline; height: 37px; border-bottom: 1px dashed var(--k); font-size: 15px; }
+  .row.tall { height: 58px; align-items: flex-start; padding-top: 8px; line-height: 21px; }
+  .row .k { width: 132px; flex: none; }
+  .row .v { flex: 1; text-align: right; font-weight: 700; }
+  .total { display: flex; justify-content: space-between; align-items: center; height: 52px; padding: 0 22px; margin-top: 12px; border-top: 3px solid var(--k); border-bottom: 3px solid var(--k); font-weight: 700; font-size: 22px; }
+  .code { position: absolute; left: 22px; right: 22px; bottom: 16px; display: flex; align-items: flex-end; justify-content: space-between; font-size: 12px; line-height: 16px; }
+  .barcode {
+    width: 250px; height: 46px;
+    background: repeating-linear-gradient(90deg, #000 0 3px, transparent 3px 5px, #000 5px 6px, transparent 6px 10px, #000 10px 14px, transparent 14px 16px, #000 16px 17px, transparent 17px 19px, #000 19px 21px, transparent 21px 25px);
+  }
+
+  /* features */
+  .feat { top: 720px; width: 488px; height: 174px; }
+  .feat .bar span:last-child { font-weight: 400; }
+  .feat .in { padding: 14px 20px 0; display: grid; grid-template-columns: 92px 1fr; column-gap: 18px; }
+  .feat .n { width: 92px; height: 92px; border: 3px solid var(--k); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 44px; letter-spacing: -0.04em; background: var(--bg); }
+  .feat h3 { font-weight: 700; font-size: 21px; line-height: 26px; letter-spacing: -0.02em; }
+  .feat p { margin-top: 6px; font-size: 14px; line-height: 21px; }
+  .feat.y { background: var(--y); }
+  .feat.y .n { background: var(--k); color: var(--y); }
+
+  /* ticker */
+  .tick {
+    left: 32px; top: 926px; width: 1536px; height: 46px; background: var(--k); color: var(--y);
+    display: flex; align-items: center; justify-content: space-between; padding: 0 20px;
+    font-size: 14px; font-weight: 700; white-space: nowrap;
+  }
+  .tick i { font-style: normal; color: var(--w); font-weight: 400; }
+</style>
+</head>
+<body>
+
+  <div class="abs box head">
+    <div class="logo">[N] NORTHWIND</div>
+    <div class="tag">SMALL-BATCH COFFEE ROASTER // ROASTED TO ORDER</div>
+    <div class="on">01 HOME</div>
+    <div>02 SHOP</div>
+    <div>03 ABOUT</div>
+    <div>04 CONTACT</div>
+    <div class="signup">SIGN UP -&gt;</div>
+  </div>
+
+  <div class="abs box shadow hero">
+    <div class="bar"><span>FILE: WELCOME.TXT</span><span>REV. 14 &nbsp;|&nbsp; 04.11.2026 &nbsp;|&nbsp; [ _ ] [ X ]</span></div>
+    <div class="in">
+      <div class="cmt">// HELLO. THIS IS A COFFEE ROASTER.</div>
+      <h1><span>WELCOME TO</span><span><mark>NORTHWIND</mark><u></u></span></h1>
+      <p class="sub">&gt; SMALL-BATCH COFFEE. ROASTED WITH PASSION.<br>&gt; DELIVERED FRESH TO YOUR DOOR. THAT IS THE WHOLE PITCH.</p>
+    </div>
+    <div class="cta">
+      <div class="btn y">GET STARTED <span>-&gt;</span></div>
+      <div class="btn w">LEARN MORE <span>[?]</span></div>
+    </div>
+    <div class="stamp">NO STOCK PHOTOS.<br>NO GRADIENTS.<br>JUST COFFEE.</div>
+  </div>
+
+  <div class="abs box shadow spec">
+    <div class="bar k"><span>SPEC SHEET</span><span>LOT NO. 14</span></div>
+<pre><span>    ) ) )
+   ( ( (
+ +---------+
+ |         |--+
+ |  NO.14  |  |
+ |         |--+
+ +---------+</span><span class="r">1 BAG<br>WHOLE BEAN<br>QTY ..... 01</span></pre>
+    <div class="rows">
+      <div class="row"><span class="k">ORIGIN</span><span class="v">HUILA, COLOMBIA</span></div>
+      <div class="row"><span class="k">PROCESS</span><span class="v">WASHED</span></div>
+      <div class="row"><span class="k">ALTITUDE</span><span class="v">1,850 M</span></div>
+      <div class="row tall"><span class="k">NOTES</span><span class="v">BLACKCURRANT / COCOA NIB / BROWN SUGAR</span></div>
+      <div class="row"><span class="k">ROAST DATE</span><span class="v">04.11.2026</span></div>
+    </div>
+    <div class="total"><span>NET WT.</span><span>250 G</span></div>
+    <div class="code"><div class="barcode"></div><div>NW-014-HUI-250<br>*** THANK YOU ***</div></div>
+  </div>
+
+  <div class="abs box shadow feat y" style="left: 32px">
+    <div class="bar"><span>FEATURE 01/03</span><span>STATUS: HOT</span></div>
+    <div class="in">
+      <div class="n">01</div>
+      <div><h3>FRESH ROASTED</h3><p>ROASTED TO ORDER. ARRIVES AT PEAK FLAVOUR, NOT AFTER IT.</p></div>
+    </div>
+  </div>
+  <div class="abs box shadow feat" style="left: 552px">
+    <div class="bar"><span>FEATURE 02/03</span><span>ETA: 2-3 DAYS</span></div>
+    <div class="in">
+      <div class="n">02</div>
+      <div><h3>FAST DELIVERY</h3><p>FREE SHIPPING. EVERY ORDER. STRAIGHT TO YOUR DOOR.</p></div>
+    </div>
+  </div>
+  <div class="abs box shadow feat" style="left: 1072px">
+    <div class="bar"><span>FEATURE 03/03</span><span>TRACE: 100%</span></div>
+    <div class="in">
+      <div class="n">03</div>
+      <div><h3>SUSTAINABLY SOURCED</h3><p>BOUGHT DIRECT FROM FARMERS. ETHICAL. TRACEABLE.</p></div>
+    </div>
+  </div>
+
+  <div class="abs tick">
+    <span>*** LOT NO. 14 <i>//</i> HUILA, COLOMBIA <i>//</i> WASHED <i>//</i> 1,850 M <i>//</i> 250 G ***</span>
+    <span>ROASTED 04.11.2026 <i>//</i> SHIPS FREE <i>//</i> END OF FILE ***</span>
+  </div>
+
+</body>
+</html>

@@ -1,0 +1,221 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1600">
+<title>Northwind — Soft clay</title>
+<style>
+  @font-face { font-family: "Fraunces"; font-weight: 500; font-style: normal; src: url("../../node_modules/@fontsource/fraunces/files/fraunces-latin-500-normal.woff2") format("woff2"); }
+  @font-face { font-family: "Fraunces"; font-weight: 600; font-style: normal; src: url("../../node_modules/@fontsource/fraunces/files/fraunces-latin-600-normal.woff2") format("woff2"); }
+  @font-face { font-family: "Fraunces"; font-weight: 500; font-style: italic; src: url("../../node_modules/@fontsource/fraunces/files/fraunces-latin-500-italic.woff2") format("woff2"); }
+  @font-face { font-family: "Nunito"; font-weight: 500; font-style: normal; src: url("../../node_modules/@fontsource/nunito/files/nunito-latin-500-normal.woff2") format("woff2"); }
+  @font-face { font-family: "Nunito"; font-weight: 700; font-style: normal; src: url("../../node_modules/@fontsource/nunito/files/nunito-latin-700-normal.woff2") format("woff2"); }
+  @font-face { font-family: "Nunito"; font-weight: 800; font-style: normal; src: url("../../node_modules/@fontsource/nunito/files/nunito-latin-800-normal.woff2") format("woff2"); }
+
+  :root { --cream: #F4E7DA; --card: #FBF2E8; --peach: #E2A584; --terra: #C96F4A; --cocoa: #5B3A2E; --soft: #8C6A5A; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { width: 1600px; height: 1000px; overflow: hidden; }
+  body {
+    background: var(--cream); color: var(--cocoa);
+    font-family: "Nunito", sans-serif; font-weight: 500;
+    -webkit-font-smoothing: antialiased;
+  }
+  .abs { position: absolute; }
+  .clay {
+    background: var(--card);
+    box-shadow:
+      0 18px 34px rgba(140, 84, 54, 0.16),
+      0 3px 6px rgba(140, 84, 54, 0.08),
+      inset 0 3px 2px rgba(255, 255, 255, 0.9),
+      inset 0 -8px 14px rgba(201, 111, 74, 0.10);
+  }
+
+  /* nav */
+  .nav { left: 56px; top: 32px; width: 1488px; height: 76px; border-radius: 38px; display: flex; align-items: center; padding: 0 14px 0 34px; }
+  .logo { display: flex; align-items: center; gap: 12px; font-family: "Fraunces", serif; font-weight: 600; font-size: 29px; letter-spacing: -0.02em; }
+  .logo svg { width: 34px; height: 34px; }
+  .links { margin-left: 420px; display: flex; gap: 10px; font-weight: 700; font-size: 17px; color: var(--soft); }
+  .links span { height: 44px; padding: 0 22px; border-radius: 22px; display: flex; align-items: center; }
+  .links .on { color: var(--cocoa); background: #F1DFCD; box-shadow: inset 0 3px 6px rgba(140,84,54,.16), inset 0 -2px 0 rgba(255,255,255,.7); }
+  .signup {
+    margin-left: auto; height: 50px; padding: 0 30px; border-radius: 25px; display: flex; align-items: center;
+    font-weight: 800; font-size: 17px; color: #FFF6EC; background: var(--terra);
+    box-shadow: 0 8px 14px rgba(201,111,74,.32), inset 0 3px 2px rgba(255,255,255,.35), inset 0 -6px 8px rgba(120,48,20,.22);
+  }
+
+  /* hero copy */
+  .chip {
+    left: 88px; top: 184px; height: 44px; padding: 0 22px 0 16px; border-radius: 22px;
+    display: flex; align-items: center; gap: 10px; font-weight: 800; font-size: 15px; letter-spacing: .02em; color: var(--terra);
+    background: #F9E3D2; box-shadow: inset 0 3px 6px rgba(140,84,54,.14), inset 0 -2px 0 rgba(255,255,255,.8);
+  }
+  .chip i { width: 14px; height: 14px; border-radius: 50%; background: var(--terra); box-shadow: inset 0 -3px 3px rgba(120,48,20,.3), inset 0 2px 1px rgba(255,255,255,.4); display: block; }
+  h1 {
+    left: 84px; top: 250px;
+    font-family: "Fraunces", serif; font-weight: 600; font-size: 122px; line-height: 116px; letter-spacing: -0.04em; color: var(--cocoa);
+  }
+  h1 em { font-style: italic; font-weight: 500; color: var(--terra); letter-spacing: -0.035em; }
+  .sub { left: 88px; top: 512px; width: 560px; font-size: 24px; line-height: 36px; color: var(--soft); }
+  .cta { left: 88px; top: 618px; display: flex; gap: 20px; }
+  .btn { height: 72px; padding: 0 40px; border-radius: 36px; display: flex; align-items: center; gap: 12px; font-weight: 800; font-size: 21px; }
+  .btn.go {
+    color: #FFF6EC; background: var(--terra);
+    box-shadow: 0 16px 26px rgba(201,111,74,.36), inset 0 4px 3px rgba(255,255,255,.38), inset 0 -9px 12px rgba(120,48,20,.24);
+  }
+  .btn.go b { width: 34px; height: 34px; border-radius: 50%; background: #FFF6EC; display: flex; align-items: center; justify-content: center; margin-right: -14px; margin-left: 4px; }
+  .btn.go b svg { width: 16px; height: 16px; }
+  .btn.more { color: var(--cocoa); }
+
+  /* illustration */
+  .scene {
+    left: 816px; top: 144px; width: 728px; height: 556px; border-radius: 48px;
+    background: var(--peach);
+    box-shadow: 0 22px 40px rgba(140,84,54,.22), inset 0 5px 4px rgba(255,255,255,.4), inset 0 -14px 22px rgba(150,70,36,.22);
+    overflow: hidden;
+  }
+  .scene svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .tag {
+    height: 48px; padding: 0 22px; border-radius: 24px; display: flex; align-items: center; gap: 10px;
+    font-weight: 800; font-size: 16px; color: var(--cocoa); white-space: nowrap; z-index: 3;
+  }
+  .tag small { font-weight: 700; font-size: 15px; color: var(--soft); }
+  .badge {
+    left: 1430px; top: 120px; width: 136px; height: 136px; border-radius: 50%; z-index: 4;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    background: var(--cocoa); color: #FFF1E2; transform: rotate(10deg);
+    box-shadow: 0 14px 22px rgba(60,30,18,.3), inset 0 4px 3px rgba(255,255,255,.18), inset 0 -8px 12px rgba(0,0,0,.28);
+    font-family: "Fraunces", serif; font-weight: 600; font-size: 38px; line-height: 38px; letter-spacing: -0.03em;
+  }
+  .badge small { font-family: "Nunito", sans-serif; font-weight: 800; font-size: 11px; line-height: 14px; letter-spacing: .1em; text-transform: uppercase; color: var(--peach); margin-top: 4px; text-align: center; }
+
+  /* features */
+  .feat { top: 752px; width: 474px; height: 184px; border-radius: 40px; padding: 0 30px 4px 30px; display: grid; grid-template-columns: 84px 1fr; column-gap: 22px; align-items: center; }
+  .ico { width: 84px; height: 84px; border-radius: 30px; display: flex; align-items: center; justify-content: center;
+    box-shadow: inset 0 4px 3px rgba(255,255,255,.5), inset 0 -8px 10px rgba(120,48,20,.18), 0 8px 12px rgba(140,84,54,.16); }
+  .ico svg { width: 46px; height: 46px; }
+  .feat h3 { font-family: "Fraunces", serif; font-weight: 600; font-size: 30px; line-height: 34px; letter-spacing: -0.025em; margin-top: 2px; }
+  .feat p { margin-top: 10px; font-size: 18px; line-height: 27px; color: var(--soft); }
+</style>
+</head>
+<body>
+
+  <div class="abs clay nav">
+    <div class="logo">
+      <svg viewBox="0 0 34 34"><ellipse cx="17" cy="17" rx="11" ry="15" transform="rotate(28 17 17)" fill="#C96F4A"/><path d="M12 6 C20 12 13 20 21 28" fill="none" stroke="#FBF2E8" stroke-width="2.6" stroke-linecap="round"/></svg>
+      northwind
+    </div>
+    <div class="links"><span class="on">Home</span><span>Shop</span><span>About</span><span>Contact</span></div>
+    <div class="signup">Sign up</div>
+  </div>
+
+  <div class="abs chip"><i></i>Small-batch coffee roasters</div>
+  <h1 class="abs">Welcome to<br><em>Northwind.</em></h1>
+  <p class="abs sub">Small-batch coffee, roasted with passion and delivered fresh to your door.</p>
+  <div class="abs cta">
+    <div class="btn go">Get started <b><svg viewBox="0 0 16 16" fill="none" stroke="#C96F4A" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8h10M9 4l4 4-4 4"/></svg></b></div>
+    <div class="btn more clay">Learn more</div>
+  </div>
+
+  <div class="abs scene">
+    <svg viewBox="0 0 728 532" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
+      <defs>
+        <linearGradient id="bag" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0" stop-color="#FFF7EE"/><stop offset=".7" stop-color="#FBF2E8"/><stop offset="1" stop-color="#EAD5C2"/>
+        </linearGradient>
+        <linearGradient id="cup" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stop-color="#7A5040"/><stop offset="1" stop-color="#4E3026"/>
+        </linearGradient>
+        <radialGradient id="sun" cx="40%" cy="35%" r="70%">
+          <stop offset="0" stop-color="#F6CFA9"/><stop offset="1" stop-color="#EDB98F"/>
+        </radialGradient>
+        <filter id="sh" x="-30%" y="-30%" width="160%" height="170%"><feDropShadow dx="0" dy="14" stdDeviation="12" flood-color="#7A3E22" flood-opacity=".28"/></filter>
+        <filter id="blur"><feGaussianBlur stdDeviation="10"/></filter>
+      </defs>
+
+      <!-- sun + hills -->
+      <circle cx="520" cy="190" r="150" fill="url(#sun)"/>
+      <path d="M-20 380 C120 300 250 330 380 372 C500 410 620 340 760 372 L760 560 L-20 560 Z" fill="#D58D68"/>
+      <path d="M-20 440 C140 400 300 452 440 440 C580 428 660 420 760 448 L760 560 L-20 560 Z" fill="#C96F4A"/>
+
+      <!-- ground shadows -->
+      <ellipse cx="292" cy="474" rx="150" ry="20" fill="#7A3E22" opacity=".35" filter="url(#blur)"/>
+      <ellipse cx="548" cy="478" rx="110" ry="16" fill="#7A3E22" opacity=".35" filter="url(#blur)"/>
+
+      <!-- coffee bag -->
+      <g filter="url(#sh)">
+        <path d="M186 132 Q186 112 206 112 L378 112 Q398 112 398 132 L412 440 Q414 470 384 470 L200 470 Q170 470 172 440 Z" fill="url(#bag)"/>
+        <path d="M184 92 Q184 76 200 76 L384 76 Q400 76 400 92 L400 118 Q400 128 390 128 L194 128 Q184 128 184 118 Z" fill="#F0DCC8"/>
+        <rect x="204" y="96" width="176" height="10" rx="5" fill="#C96F4A"/>
+      </g>
+      <!-- label -->
+      <rect x="208" y="184" width="168" height="220" rx="30" fill="#C96F4A"/>
+      <circle cx="292" cy="246" r="34" fill="#F4E7DA"/>
+      <ellipse cx="292" cy="246" rx="13" ry="19" transform="rotate(28 292 246)" fill="#5B3A2E"/>
+      <path d="M286 232 C296 240 288 250 298 260" fill="none" stroke="#F4E7DA" stroke-width="3" stroke-linecap="round"/>
+      <text x="292" y="318" text-anchor="middle" font-family="Fraunces" font-weight="600" font-size="27" letter-spacing="-.8" fill="#FFF6EC">northwind</text>
+      <text x="292" y="346" text-anchor="middle" font-family="Nunito" font-weight="800" font-size="12" letter-spacing="1.6" fill="#F9D9C3">LOT NO. 14 · HUILA</text>
+      <rect x="252" y="364" width="80" height="22" rx="11" fill="#F4E7DA"/>
+      <text x="292" y="380" text-anchor="middle" font-family="Nunito" font-weight="800" font-size="13" fill="#5B3A2E">250 g</text>
+
+      <!-- cup -->
+      <g filter="url(#sh)">
+        <path d="M462 352 L634 352 L634 392 Q634 472 548 472 Q462 472 462 392 Z" fill="url(#cup)"/>
+        <path d="M634 366 Q684 366 684 404 Q684 440 630 440" fill="none" stroke="#5B3A2E" stroke-width="20" stroke-linecap="round"/>
+        <rect x="452" y="340" width="192" height="28" rx="14" fill="#6B4436"/>
+      </g>
+      <rect x="470" y="346" width="156" height="10" rx="5" fill="#3A2219"/>
+      <path d="M478 386 Q478 440 520 456" fill="none" stroke="#FFFFFF" stroke-opacity=".18" stroke-width="10" stroke-linecap="round"/>
+      <!-- steam -->
+      <g fill="none" stroke="#FFF6EC" stroke-width="12" stroke-linecap="round" opacity=".8">
+        <path d="M512 316 C494 290 530 276 512 248"/>
+        <path d="M560 320 C542 290 580 272 560 236"/>
+        <path d="M604 316 C588 292 620 280 604 256"/>
+      </g>
+
+      <!-- beans -->
+      <g>
+        <ellipse cx="84" cy="470" rx="24" ry="34" transform="rotate(62 84 470)" fill="#5B3A2E"/>
+        <path d="M58 462 C76 464 90 478 110 476" fill="none" stroke="#E2A584" stroke-width="4" stroke-linecap="round"/>
+        <ellipse cx="136" cy="492" rx="19" ry="27" transform="rotate(-24 136 492)" fill="#6B4436"/>
+        <path d="M128 470 C142 482 128 500 144 514" fill="none" stroke="#E2A584" stroke-width="4" stroke-linecap="round"/>
+        <ellipse cx="676" cy="492" rx="17" ry="24" transform="rotate(40 676 492)" fill="#5B3A2E"/>
+        <path d="M660 480 C674 486 678 500 692 502" fill="none" stroke="#E2A584" stroke-width="3.5" stroke-linecap="round"/>
+      </g>
+    </svg>
+  </div>
+
+  <div class="abs tag clay" style="left: 784px; top: 202px"><span>Lot No. 14</span><small>Huila, Colombia</small></div>
+  <div class="abs tag clay" style="left: 1262px; top: 318px"><small>Washed · 1,850 m</small></div>
+  <div class="abs tag clay" style="left: 1070px; top: 672px"><span>Tastes like</span><small>blackcurrant, cocoa nib, brown sugar</small></div>
+  <div class="abs badge">250 g<small>Roasted<br>04 Nov</small></div>
+
+  <div class="abs clay feat" style="left: 56px">
+    <div class="ico" style="background:#F3B892">
+      <svg viewBox="0 0 46 46"><path d="M23 5 C25 13 35 17 35 29 A12 12 0 0 1 11 29 C11 24 13 21 16 18 C17 22 19 23 20 23 C19 17 20 10 23 5 Z" fill="#C96F4A"/><path d="M23 24 C24 28 28 29 28 34 A5 5 0 0 1 18 34 C18 30 21 28 23 24 Z" fill="#FCE3CD"/></svg>
+    </div>
+    <div>
+      <h3>Fresh roasted</h3>
+      <p>Every batch is roasted to order, so it arrives at its peak.</p>
+    </div>
+  </div>
+  <div class="abs clay feat" style="left: 563px">
+    <div class="ico" style="background:#EBCDB4">
+      <svg viewBox="0 0 46 46"><rect x="7" y="16" width="32" height="22" rx="6" fill="#5B3A2E"/><path d="M5 17 Q5 11 11 11 L35 11 Q41 11 41 17 L41 19 L5 19 Z" fill="#7A5040"/><rect x="19" y="11" width="8" height="15" rx="2" fill="#E2A584"/></svg>
+    </div>
+    <div>
+      <h3>Fast delivery</h3>
+      <p>Free shipping on every order, at your door in two to three days.</p>
+    </div>
+  </div>
+  <div class="abs clay feat" style="left: 1070px">
+    <div class="ico" style="background:#D9C9A8">
+      <svg viewBox="0 0 46 46"><path d="M9 37 C7 19 19 8 39 8 C40 27 29 39 9 37 Z" fill="#7C8B55"/><path d="M10 37 C17 27 24 21 33 15" fill="none" stroke="#EDE6CC" stroke-width="3" stroke-linecap="round"/></svg>
+    </div>
+    <div>
+      <h3>Sustainably sourced</h3>
+      <p>Bought directly from farmers. Ethical and traceable.</p>
+    </div>
+  </div>
+
+</body>
+</html>

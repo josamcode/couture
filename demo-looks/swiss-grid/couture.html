@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1600">
+<title>Northwind — Swiss grid</title>
+<style>
+  @font-face { font-family: "Archivo"; font-weight: 400; font-style: normal; src: url("../../node_modules/@fontsource/archivo/files/archivo-latin-400-normal.woff2") format("woff2"); }
+  @font-face { font-family: "Archivo"; font-weight: 500; font-style: normal; src: url("../../node_modules/@fontsource/archivo/files/archivo-latin-500-normal.woff2") format("woff2"); }
+  @font-face { font-family: "Archivo"; font-weight: 700; font-style: normal; src: url("../../node_modules/@fontsource/archivo/files/archivo-latin-700-normal.woff2") format("woff2"); }
+  @font-face { font-family: "Archivo"; font-weight: 900; font-style: normal; src: url("../../node_modules/@fontsource/archivo/files/archivo-latin-900-normal.woff2") format("woff2"); }
+
+  :root { --bg: #F2F2EF; --ink: #0A0A0A; --red: #E10600; --mute: #6B6B66; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { width: 1600px; height: 1000px; overflow: hidden; }
+  body {
+    background: var(--bg); color: var(--ink);
+    font-family: "Archivo", sans-serif; font-weight: 400;
+    font-size: 16px; line-height: 22px;
+    font-variant-numeric: tabular-nums;
+    -webkit-font-smoothing: antialiased;
+  }
+  .grid {
+    position: absolute; left: 48px; width: 1504px;
+    display: grid; grid-template-columns: repeat(12, 1fr); column-gap: 24px;
+  }
+  b, .b { font-weight: 700; }
+  .red { color: var(--red); }
+  .mute { color: var(--mute); }
+
+  /* header */
+  .head { top: 0; height: 84px; align-items: center; border-bottom: 6px solid var(--ink); padding-top: 6px; }
+  .brand { grid-column: 1 / span 3; font-weight: 900; font-size: 27px; letter-spacing: -0.03em; display: flex; align-items: center; gap: 12px; }
+  .brand i { width: 18px; height: 18px; background: var(--red); display: block; }
+  .tag { grid-column: 4 / span 3; font-size: 15px; line-height: 19px; }
+  .nav { font-weight: 700; font-size: 16px; }
+  .nav small { display: block; font-weight: 400; font-size: 12px; line-height: 14px; color: var(--mute); margin-bottom: 2px; }
+  .signup { grid-column: 11 / span 2; justify-self: end; font-weight: 700; font-size: 16px; color: var(--red); text-align: right; }
+  .signup small { display: block; font-weight: 400; font-size: 12px; line-height: 14px; color: var(--mute); margin-bottom: 2px; }
+
+  /* hero */
+  .hero { top: 118px; height: 486px; }
+  h1 {
+    grid-column: 1 / span 8;
+    font-weight: 900; font-size: 214px; line-height: 170px; letter-spacing: -0.055em;
+    margin-top: -9px; margin-left: -10px; white-space: nowrap;
+  }
+  h1 span { color: var(--red); }
+  h1 i { font-style: normal; display: inline-block; margin-left: 9px; }
+  .block {
+    grid-column: 9 / span 4; height: 486px; background: var(--red); color: #fff;
+    position: relative; overflow: hidden;
+  }
+  .block .tl, .block .tr, .block .bl, .block .br { position: absolute; font-size: 15px; line-height: 19px; font-weight: 500; }
+  .block .tl { left: 20px; top: 18px; }
+  .block .tr { right: 20px; top: 18px; text-align: right; }
+  .block .br { right: 20px; bottom: 18px; text-align: right; }
+  .block .num {
+    position: absolute; left: -4px; bottom: -18px;
+    font-weight: 900; font-size: 352px; line-height: 352px; letter-spacing: -0.07em;
+  }
+
+  /* lower band */
+  .band { top: 632px; height: 320px; border-top: 1px solid var(--ink); }
+  .band > div { padding-top: 14px; position: relative; }
+  .idx { font-size: 12px; line-height: 16px; color: var(--mute); display: flex; justify-content: space-between; padding-bottom: 12px; }
+  .idx b { color: var(--ink); }
+
+  .intro { grid-column: 1 / span 3; }
+  .intro h2 { font-weight: 700; font-size: 26px; line-height: 28px; letter-spacing: -0.02em; margin-top: 4px; }
+  .intro p { margin-top: 12px; font-size: 18px; line-height: 25px; max-width: 330px; }
+  .cta { position: absolute; left: 0; right: 0; bottom: 0; display: flex; align-items: stretch; height: 56px; }
+  .btn {
+    flex: 1; background: var(--ink); color: #fff; font-weight: 700; font-size: 17px;
+    display: flex; align-items: center; justify-content: space-between; padding: 0 18px;
+  }
+  .more { width: 128px; display: flex; align-items: center; justify-content: flex-end; font-weight: 700; font-size: 16px; border-bottom: 2px solid var(--ink); }
+
+  .feat { grid-column: span 2; }
+  .feat .n { font-weight: 900; font-size: 76px; line-height: 66px; letter-spacing: -0.05em; margin-top: 2px; margin-left: -3px; }
+  .feat h3 { margin-top: 20px; font-weight: 700; font-size: 20px; line-height: 23px; letter-spacing: -0.01em; }
+  .feat p { margin-top: 8px; font-size: 15px; line-height: 21px; color: #2b2b28; }
+  .feat::after, .intro::after, .data::after { content: ""; position: absolute; left: 0; right: 0; top: -1px; height: 5px; background: var(--ink); }
+  .feat.f1::after { background: var(--red); }
+
+  .data { grid-column: 10 / span 3; }
+  table { width: 100%; border-collapse: collapse; font-size: 15px; line-height: 20px; }
+  td { padding: 7px 0 8px; border-top: 1px solid rgba(10,10,10,.28); vertical-align: top; }
+  tr:first-child td { border-top: 0; padding-top: 2px; }
+  td:first-child { width: 96px; color: var(--mute); }
+  td:last-child { font-weight: 700; }
+  tr:last-child td { border-bottom: 1px solid var(--ink); }
+
+  .foot { top: 962px; font-size: 12px; line-height: 16px; color: var(--mute); }
+  .foot span:nth-child(1) { grid-column: 1 / span 3; }
+  .foot span:nth-child(2) { grid-column: 4 / span 6; }
+  .foot span:nth-child(3) { grid-column: 10 / span 3; text-align: right; }
+</style>
+</head>
+<body>
+
+  <header class="grid head">
+    <div class="brand"><i></i>Northwind</div>
+    <div class="tag">Small-batch<br>coffee roasters</div>
+    <div class="nav" style="grid-column: 7"><small>A</small>Home</div>
+    <div class="nav" style="grid-column: 8"><small>B</small>Shop</div>
+    <div class="nav" style="grid-column: 9"><small>C</small>About</div>
+    <div class="nav" style="grid-column: 10"><small>D</small>Contact</div>
+    <div class="signup"><small>Account</small>Sign up &nearr;</div>
+  </header>
+
+  <section class="grid hero">
+    <h1>Coffee,<br>roasted<br><i>fresh</i><span>.</span></h1>
+    <div class="block">
+      <div class="tl">Lot No.</div>
+      <div class="tr">Huila, Colombia<br>Washed<br>1,850 m</div>
+      <div class="num">14</div>
+      <div class="br">250 g</div>
+    </div>
+  </section>
+
+  <section class="grid band">
+    <div class="intro">
+      <div class="idx"><b>Welcome</b><span>00</span></div>
+      <h2>Welcome to Northwind.</h2>
+      <p>Small-batch coffee, roasted with passion and delivered fresh to your door.</p>
+      <div class="cta">
+        <div class="btn"><span>Get started</span><span>&rarr;</span></div>
+        <div class="more">Learn more</div>
+      </div>
+    </div>
+
+    <div class="feat f1">
+      <div class="idx"><b>Roast</b><span>01</span></div>
+      <div class="n red">01</div>
+      <h3>Fresh roasted</h3>
+      <p>Every batch is roasted to order and arrives at peak flavour.</p>
+    </div>
+    <div class="feat">
+      <div class="idx"><b>Delivery</b><span>02</span></div>
+      <div class="n">02</div>
+      <h3>Fast delivery</h3>
+      <p>Free shipping on every order. At your door in 2–3 days.</p>
+    </div>
+    <div class="feat">
+      <div class="idx"><b>Source</b><span>03</span></div>
+      <div class="n">03</div>
+      <h3>Sustainably sourced</h3>
+      <p>Bought directly from farmers. Ethical, traceable coffee.</p>
+    </div>
+
+    <div class="data">
+      <div class="idx"><b>Current lot</b><span>No. 14</span></div>
+      <table>
+        <tr><td>Origin</td><td>Huila, Colombia</td></tr>
+        <tr><td>Process</td><td>Washed</td></tr>
+        <tr><td>Altitude</td><td>1,850 m</td></tr>
+        <tr><td>Notes</td><td>Blackcurrant, cocoa nib, brown sugar</td></tr>
+        <tr><td>Roasted</td><td>04.11.2026</td></tr>
+        <tr><td>Weight</td><td>250 g</td></tr>
+      </table>
+    </div>
+  </section>
+
+  <footer class="grid foot">
+    <span>Northwind Coffee Roasters</span>
+    <span>Roasted to order — shipped free — sourced direct</span>
+    <span>2026 / 01</span>
+  </footer>
+
+</body>
+</html>

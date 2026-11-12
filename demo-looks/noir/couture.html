@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1600">
+<title>Northwind — Noir</title>
+<style>
+  @font-face { font-family: "Cormorant Garamond"; font-weight: 300; font-style: normal; src: url("../../node_modules/@fontsource/cormorant-garamond/files/cormorant-garamond-latin-300-normal.woff2") format("woff2"); }
+  @font-face { font-family: "Cormorant Garamond"; font-weight: 300; font-style: italic; src: url("../../node_modules/@fontsource/cormorant-garamond/files/cormorant-garamond-latin-300-italic.woff2") format("woff2"); }
+  @font-face { font-family: "Cormorant Garamond"; font-weight: 400; font-style: normal; src: url("../../node_modules/@fontsource/cormorant-garamond/files/cormorant-garamond-latin-400-normal.woff2") format("woff2"); }
+  @font-face { font-family: "Cormorant Garamond"; font-weight: 400; font-style: italic; src: url("../../node_modules/@fontsource/cormorant-garamond/files/cormorant-garamond-latin-400-italic.woff2") format("woff2"); }
+  @font-face { font-family: "Cormorant Garamond"; font-weight: 600; font-style: normal; src: url("../../node_modules/@fontsource/cormorant-garamond/files/cormorant-garamond-latin-600-normal.woff2") format("woff2"); }
+
+  :root { --black: #0C0A09; --gold: #C9A45C; --bone: #EAE0CC; --dim: #8F8676; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { width: 1600px; height: 1000px; overflow: hidden; }
+  body {
+    background: var(--black); color: var(--bone);
+    font-family: "Cormorant Garamond", serif; font-weight: 400;
+    -webkit-font-smoothing: antialiased;
+  }
+  .stage {
+    position: relative; width: 1600px; height: 1000px;
+    background:
+      radial-gradient(circle at 1070px 400px, rgba(222,184,110,.46) 0px, rgba(201,164,92,.24) 200px, rgba(201,164,92,.08) 420px, rgba(201,164,92,0) 680px),
+      radial-gradient(ellipse 900px 520px at 1128px 452px, rgba(60,40,18,.5), rgba(12,10,9,0) 100%),
+      var(--black);
+  }
+  .stage::after { /* vignette */
+    content: ""; position: absolute; inset: 0; pointer-events: none;
+    background: radial-gradient(ellipse 1100px 760px at 60% 46%, rgba(0,0,0,0) 40%, rgba(0,0,0,.55) 100%);
+  }
+  .stage > * { position: absolute; z-index: 2; }
+
+  .caps { font-weight: 600; font-size: 13px; letter-spacing: 0.34em; text-transform: uppercase; }
+
+  /* nav */
+  .nav { left: 96px; right: 96px; top: 44px; height: 44px; display: flex; align-items: center; justify-content: space-between; }
+  .brand { font-weight: 400; font-size: 22px; letter-spacing: 0.42em; text-transform: uppercase; color: var(--gold); }
+  .links { display: flex; gap: 52px; color: var(--dim); }
+  .links .on { color: var(--bone); }
+  .signup { color: var(--gold); border: 1px solid rgba(201,164,92,.55); padding: 13px 26px 12px 30px; }
+
+  /* cup */
+  .cup { left: 800px; top: 126px; width: 640px; height: 640px; z-index: 1; overflow: visible; }
+
+  /* copy */
+  .eyebrow { left: 96px; top: 208px; color: var(--gold); display: flex; align-items: center; gap: 20px; }
+  .eyebrow::before { content: ""; width: 56px; height: 1px; background: var(--gold); opacity: .7; }
+  h1 {
+    left: 90px; top: 246px;
+    font-weight: 300; font-size: 138px; line-height: 126px; letter-spacing: -0.02em; color: var(--bone);
+  }
+  h1 em { font-style: italic; color: var(--gold); letter-spacing: -0.025em; }
+  .sub {
+    left: 96px; top: 648px; width: 560px;
+    font-size: 25px; line-height: 34px; color: #A39A88;
+  }
+  .sub i { color: var(--bone); }
+  .cta { left: 96px; top: 748px; display: flex; align-items: center; gap: 40px; }
+  .btn {
+    height: 56px; padding: 0 38px 0 42px; display: flex; align-items: center;
+    color: var(--black); background: var(--gold);
+  }
+  .more { color: var(--bone); padding-bottom: 8px; border-bottom: 1px solid rgba(201,164,92,.6); }
+
+  /* lot note beside the cup */
+  .lot { right: 96px; top: 208px; text-align: right; color: var(--dim); line-height: 26px; }
+  .lot b { color: var(--gold); font-weight: 600; }
+
+  /* credits */
+  .credits {
+    left: 96px; right: 96px; top: 848px; height: 108px;
+    border-top: 1px solid rgba(201,164,92,.38);
+    display: grid; grid-template-columns: 1fr 1fr 1fr 1.15fr;
+  }
+  .credits > div { padding: 22px 28px 0 28px; border-left: 1px solid rgba(201,164,92,.22); }
+  .credits > div:first-child { padding-left: 0; border-left: 0; }
+  .credits .caps { color: var(--gold); display: flex; gap: 16px; }
+  .credits .caps span { color: var(--dim); min-width: 22px; }
+  .credits p { margin-top: 10px; font-size: 20px; line-height: 26px; color: #A39A88; }
+  .credits p i { color: var(--bone); }
+</style>
+</head>
+<body>
+<div class="stage">
+
+  <svg class="cup" viewBox="0 0 640 640" aria-hidden="true">
+    <defs>
+      <radialGradient id="saucer" cx="36%" cy="32%" r="80%">
+        <stop offset="0" stop-color="#54422A"/><stop offset=".45" stop-color="#261E15"/><stop offset="1" stop-color="#0E0B09"/>
+      </radialGradient>
+      <radialGradient id="wall" cx="34%" cy="30%" r="85%">
+        <stop offset="0" stop-color="#8A6C3C"/><stop offset=".5" stop-color="#33281A"/><stop offset="1" stop-color="#110E0A"/>
+      </radialGradient>
+      <radialGradient id="coffee" cx="38%" cy="34%" r="75%">
+        <stop offset="0" stop-color="#6B4520"/><stop offset=".4" stop-color="#2A190C"/><stop offset="1" stop-color="#070504"/>
+      </radialGradient>
+      <linearGradient id="rim" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0" stop-color="#F1D9A2"/><stop offset=".45" stop-color="#C9A45C"/><stop offset="1" stop-color="#3A2D17"/>
+      </linearGradient>
+      <linearGradient id="rim2" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0" stop-color="#C9A45C" stop-opacity=".9"/><stop offset=".6" stop-color="#C9A45C" stop-opacity=".25"/><stop offset="1" stop-color="#C9A45C" stop-opacity=".05"/>
+      </linearGradient>
+      <filter id="soft" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="18"/></filter>
+      <filter id="steam" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="5"/></filter>
+    </defs>
+
+    <!-- cast shadow, falling away from the light -->
+    <ellipse cx="372" cy="372" rx="262" ry="258" fill="#000" opacity=".7" filter="url(#soft)"/>
+    <!-- saucer -->
+    <circle cx="320" cy="320" r="248" fill="url(#saucer)"/>
+    <circle cx="320" cy="320" r="248" fill="none" stroke="url(#rim2)" stroke-width="1.5"/>
+    <circle cx="320" cy="320" r="196" fill="none" stroke="#C9A45C" stroke-opacity=".12" stroke-width="1"/>
+    <!-- handle -->
+    <path d="M436 436 L496 496" stroke="#000" stroke-width="40" stroke-linecap="round" opacity=".5" transform="translate(12 14)" filter="url(#steam)"/>
+    <path d="M436 436 L496 496" stroke="#C9A45C" stroke-opacity=".55" stroke-width="33" stroke-linecap="round"/>
+    <path d="M436 436 L496 496" stroke="url(#wall)" stroke-width="30" stroke-linecap="round"/>
+    <path d="M452 440 L494 482" stroke="#F1D9A2" stroke-opacity=".22" stroke-width="5" stroke-linecap="round"/>
+    <!-- cup -->
+    <circle cx="332" cy="334" r="160" fill="#000" opacity=".5" filter="url(#soft)"/>
+    <circle cx="320" cy="320" r="158" fill="url(#wall)"/>
+    <circle cx="320" cy="320" r="158" fill="none" stroke="url(#rim)" stroke-width="2.5"/>
+    <!-- coffee -->
+    <circle cx="320" cy="320" r="138" fill="url(#coffee)"/>
+    <circle cx="320" cy="320" r="138" fill="none" stroke="#000" stroke-opacity=".6" stroke-width="3"/>
+    <!-- highlight on the surface -->
+    <path d="M214 286 A112 112 0 0 1 300 210" fill="none" stroke="#F1D9A2" stroke-opacity=".5" stroke-width="2" stroke-linecap="round"/>
+    <path d="M228 300 A96 96 0 0 1 286 232" fill="none" stroke="#F1D9A2" stroke-opacity=".16" stroke-width="10" stroke-linecap="round" filter="url(#steam)"/>
+    <!-- steam -->
+    <g fill="none" stroke="#EAD9B4" stroke-linecap="round" filter="url(#steam)">
+      <path d="M300 300 C270 250 340 220 306 160 C286 124 318 96 308 60" stroke-width="9" stroke-opacity=".30"/>
+      <path d="M352 318 C330 270 392 240 362 186 C346 156 372 132 364 104" stroke-width="7" stroke-opacity=".22"/>
+    </g>
+  </svg>
+
+  <div class="nav">
+    <div class="brand">Northwind</div>
+    <div class="links caps"><span class="on">Home</span><span>Shop</span><span>About</span><span>Contact</span></div>
+    <div class="signup caps">Sign up</div>
+  </div>
+
+  <div class="eyebrow caps">Welcome to Northwind</div>
+  <h1>Small batch.<br><em>Slow fire.</em><br>Your door.</h1>
+  <p class="sub">Coffee roasted with passion, a little at a time, and delivered fresh&thinsp;&mdash;&thinsp;<i>while it still has something to say.</i></p>
+  <div class="cta">
+    <div class="btn caps">Get started</div>
+    <div class="more caps">Learn more</div>
+  </div>
+
+  <div class="lot caps">
+    <b>Lot No. 14</b><br>Huila, Colombia<br>Washed · 1,850 m
+  </div>
+
+  <div class="credits">
+    <div>
+      <div class="caps"><span>I</span>Fresh roasted</div>
+      <p>Roasted to order. Never before you ask.</p>
+    </div>
+    <div>
+      <div class="caps"><span>II</span>Fast delivery</div>
+      <p>At your door in two to three days. Shipping is on us.</p>
+    </div>
+    <div>
+      <div class="caps"><span>III</span>Sustainably sourced</div>
+      <p>Bought direct from the farmers. Every bean traceable.</p>
+    </div>
+    <div>
+      <div class="caps"><span>N&ordm;</span>In the cup</div>
+      <p><i>Blackcurrant, cocoa nib, brown sugar.</i><br>250 g · Roasted 04.11.26</p>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

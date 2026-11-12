@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1600">
+<title>Northwind — Small-Batch Coffee</title>
+<style>
+  @font-face { font-family: "Inter"; font-weight: 400; font-style: normal; src: url("../../node_modules/@fontsource/inter/files/inter-latin-400-normal.woff2") format("woff2"); }
+  @font-face { font-family: "Inter"; font-weight: 500; font-style: normal; src: url("../../node_modules/@fontsource/inter/files/inter-latin-500-normal.woff2") format("woff2"); }
+  @font-face { font-family: "Inter"; font-weight: 600; font-style: normal; src: url("../../node_modules/@fontsource/inter/files/inter-latin-600-normal.woff2") format("woff2"); }
+  @font-face { font-family: "Inter"; font-weight: 700; font-style: normal; src: url("../../node_modules/@fontsource/inter/files/inter-latin-700-normal.woff2") format("woff2"); }
+  @font-face { font-family: "Inter"; font-weight: 800; font-style: normal; src: url("../../node_modules/@fontsource/inter/files/inter-latin-800-normal.woff2") format("woff2"); }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { width: 1600px; height: 1000px; overflow: hidden; }
+  body {
+    font-family: "Inter", sans-serif;
+    color: #111827;
+    background: linear-gradient(180deg, #F7F6FF 0%, #FFFFFF 46%, #FFFFFF 100%);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .nav {
+    height: 80px;
+    padding: 0 96px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: rgba(255, 255, 255, 0.8);
+    border-bottom: 1px solid #EEEEF4;
+  }
+  .logo { display: flex; align-items: center; gap: 10px; font-size: 22px; font-weight: 700; letter-spacing: -0.01em; }
+  .logo i { width: 28px; height: 28px; border-radius: 8px; background: linear-gradient(135deg, #7C6CF8, #5B4FE0); display: block; }
+  .links { display: flex; gap: 40px; font-size: 16px; font-weight: 500; color: #4B5563; }
+  .links .on { color: #111827; }
+  .signup {
+    font-size: 15px; font-weight: 600; color: #fff;
+    padding: 11px 24px; border-radius: 999px;
+    background: #6D5EF6;
+  }
+
+  .hero { text-align: center; padding-top: 104px; }
+  .badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    height: 36px; padding: 0 16px; border-radius: 999px;
+    background: #EEEBFF; color: #5B4FE0;
+    font-size: 14px; font-weight: 600;
+  }
+  .badge i { width: 8px; height: 8px; border-radius: 50%; background: #6D5EF6; display: block; }
+  h1 {
+    margin-top: 26px;
+    font-size: 72px; line-height: 80px; font-weight: 800; letter-spacing: -0.03em;
+  }
+  h1 span {
+    background: linear-gradient(90deg, #7C6CF8, #4F46E5);
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+  .sub {
+    width: 640px; margin: 22px auto 0;
+    font-size: 20px; line-height: 32px; color: #6B7280;
+  }
+  .cta { margin-top: 38px; display: flex; justify-content: center; gap: 16px; }
+  .btn {
+    height: 56px; padding: 0 34px; border-radius: 999px;
+    display: inline-flex; align-items: center;
+    font-size: 17px; font-weight: 600;
+  }
+  .btn.primary {
+    color: #fff;
+    background: linear-gradient(90deg, #7C6CF8 0%, #4F46E5 100%);
+    box-shadow: 0 10px 24px rgba(109, 94, 246, 0.35);
+  }
+  .btn.ghost { color: #374151; border: 1px solid #D9DBE3; background: #fff; }
+
+  .cards {
+    width: 1168px; margin: 92px auto 0;
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px;
+  }
+  .card {
+    background: #fff; border-radius: 16px; padding: 34px 32px 36px;
+    border: 1px solid #F0F0F5;
+    box-shadow: 0 10px 30px rgba(17, 24, 39, 0.07), 0 2px 6px rgba(17, 24, 39, 0.04);
+    text-align: center;
+  }
+  .icon {
+    width: 60px; height: 60px; border-radius: 50%; margin: 0 auto;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .icon svg { width: 28px; height: 28px; }
+  .i1 { background: #EDE9FE; } .i2 { background: #DBEAFE; } .i3 { background: #D1FAE5; }
+  .card h3 { margin-top: 22px; font-size: 22px; font-weight: 700; letter-spacing: -0.01em; }
+  .card p { margin-top: 10px; font-size: 16px; line-height: 26px; color: #6B7280; }
+
+  .trust { margin-top: 48px; text-align: center; font-size: 15px; color: #9CA3AF; }
+  .trust b { color: #6B7280; font-weight: 600; }
+</style>
+</head>
+<body>
+  <div class="nav">
+    <div class="logo"><i></i>Northwind</div>
+    <div class="links"><span class="on">Home</span><span>Shop</span><span>About</span><span>Contact</span></div>
+    <div class="signup">Sign Up</div>
+  </div>
+
+  <div class="hero">
+    <div class="badge"><i></i>Now roasting: our seasonal blends</div>
+    <h1>Welcome to <span>Northwind</span></h1>
+    <p class="sub">Discover our small-batch coffee, roasted with passion and delivered fresh to your door.</p>
+    <div class="cta">
+      <div class="btn primary">Get Started</div>
+      <div class="btn ghost">Learn More</div>
+    </div>
+  </div>
+
+  <div class="cards">
+    <div class="card">
+      <div class="icon i1">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#6D5EF6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3c1 3 4 5 4 9a4 4 0 0 1-8 0c0-1.5.6-2.6 1.4-3.6C10.4 9.6 12 7 12 3z"/><path d="M6 20h12"/></svg>
+      </div>
+      <h3>Fresh Roasted</h3>
+      <p>Every batch is roasted to order, so your coffee always arrives at peak flavor.</p>
+    </div>
+    <div class="card">
+      <div class="icon i2">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#3B82F6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 3 5 13h6l-1 8 8-10h-6l1-8z"/></svg>
+      </div>
+      <h3>Fast Delivery</h3>
+      <p>Free shipping on every order, delivered to your door in two to three days.</p>
+    </div>
+    <div class="card">
+      <div class="icon i3">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 19c0-8 5-13 14-14-1 9-6 14-14 14z"/><path d="M5 19c3-4 6-6 9-8"/></svg>
+      </div>
+      <h3>Sustainably Sourced</h3>
+      <p>We partner directly with farmers to bring you ethical, traceable coffee.</p>
+    </div>
+  </div>
+
+  <p class="trust">Trusted by <b>10,000+</b> coffee lovers around the world</p>
+</body>
+</html>
